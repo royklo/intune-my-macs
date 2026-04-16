@@ -1,0 +1,16 @@
+<MacIntuneManifest>
+  <ReferenceId>SCR-APP-101</ReferenceId>
+  <Version>1.0</Version>
+  <Type>Script</Type>
+  <Name>SCR-APP-101 - Install Microsoft Edge</Name>
+  <Description>Downloads and installs Microsoft Edge from the official Microsoft download URL. Uses aria2c for optimized downloading when available, with automatic fallback to curl. Performs intelligent update checking via HTTP Last-Modified headers to avoid unnecessary reinstalls. Waits for Edge to close before updating if running.</Description>
+  <Platform>macOS</Platform>
+  <Category>Config</Category>
+  <SourceFile>scripts/intune/scr-app-101-install-edge.sh</SourceFile>
+  <Script>
+    <RunAsAccount>system</RunAsAccount>
+    <BlockExecutionNotifications>true</BlockExecutionNotifications>
+    <ExecutionFrequency>PT0S</ExecutionFrequency>
+    <RetryCount>3</RetryCount>
+  </Script>
+</MacIntuneManifest>

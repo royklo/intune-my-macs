@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 # #requires -module Microsoft.Graph.Beta.Devices.CorporateManagement
 # #requires -module Microsoft.Graph.Authentication
 
-<# region Authentication
+<# region Authentication 
 To authenticate, you'll use the Microsoft Graph PowerShell SDK. If you haven't already installed the SDK, see this guide:
 https://learn.microsoft.com/en-us/powershell/microsoftgraph/installation?view=graph-powershell-1.0
 The PowerShell SDK supports two types of authentication: delegated access, and app-only access.
