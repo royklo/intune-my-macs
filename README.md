@@ -125,14 +125,17 @@ Assignment filters are evaluated at policy delivery time with no group-evaluatio
 
 ---
 
-## Changelog
+## Recent changes
 
-| Date | Change | Details |
-|------|--------|---------|
-| 2026-04-10 | **Removed** Set Office Default Applications script | macOS 26.4 requires user consent for every default-app change. The `utiluti`-based script now triggers multiple confirmation prompts per user, making silent deployment impossible. See [utiluti#10](https://github.com/scriptingosx/utiluti/issues/10). |
-| 2026-04-10 | **Fixed** POL-SEC-006 passkey autofill blocking | Changed `allowPasswordAutoFill` and `safariAllowAutoFill` to `true` so users can enable "AutoFill Passwords and Passkeys" during device registration. Fixes [#17](https://github.com/microsoft/intune-my-macs/issues/17). |
-| 2026-04-10 | **Fixed** POL-APP-100 deprecated MAU data collection value | Changed `AcknowledgedDataCollectionPolicy` from the deprecated "send required and optional data" to "send required data". Prevents MAU from repeatedly prompting users. Fixes [#15](https://github.com/microsoft/intune-my-macs/issues/15). |
-| 2026-04-10 | **Added** guidance against dynamic device groups | Dynamic device groups cause unpredictable enrollment delays. README now documents assignment filters as the recommended approach. Fixes [#14](https://github.com/microsoft/intune-my-macs/issues/14). |
+| Date | Change | Details | Author |
+|------|--------|---------|--------|
+| 2026-05-18 | **Added** Platform SSO during Setup Assistant + PSSO autofill | New [`apps/Check-PSSO.zsh`](apps/Check-PSSO.zsh), `PSSOautofill.pkg`, bundled `CompanyPortal-Installer.pkg`, app manifests `app-idp-001-psso-autofill.xml` and `app-sys-001-company-portal.xml`, plus updates to [`configurations/entra/cfg-idp-001-platform-sso.json`](configurations/entra/cfg-idp-001-platform-sso.json) and significant `mainScript.ps1` enhancements. | Chris Kunze |
+| 2026-05-14 | **Added** SwiftDialog GUI launcher | New [`Start-IntuneMyMacs.ps1`](Start-IntuneMyMacs.ps1) provides a native macOS frontend over `mainScript.ps1`. | Chris Kunze |
+| 2026-04-22 | **Added** fork-sync tooling | New [`tools/git-fork-sync-workflow.sh`](tools/git-fork-sync-workflow.sh) and [`tools/sync-from-upstream.sh`](tools/sync-from-upstream.sh) for keeping forks current with upstream. | Chris Kunze |
+| 2026-04-20 | **Added** recovery lock support + timezone updates | New macOS recovery lock configuration; documentation refreshed. | Chris Kunze |
+| 2026-04-16 | **Changed** onboarding to monitor-only | Onboarding flow now monitors install state instead of performing it; additional apps added. | Chris Kunze |
+
+See [CHANGELOG.md](CHANGELOG.md) for the full history and the list of [contributors](CHANGELOG.md#contributors).
 
 ---
 

@@ -1,0 +1,56 @@
+# Changelog
+
+All notable changes to **Intune my Macs** are documented in this file.
+
+The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Dates are `YYYY-MM-DD`. Newest entries are at the top.
+
+> This project is a **proof of concept** and does not follow semantic versioning. Changes are recorded by date rather than release tag.
+
+| Date | Change | Details | Author |
+|------|--------|---------|--------|
+| 2026-05-18 | **Added** Platform SSO during Setup Assistant + PSSO autofill | New [`apps/Check-PSSO.zsh`](apps/Check-PSSO.zsh), `PSSOautofill.pkg`, bundled `CompanyPortal-Installer.pkg`, app manifests `app-idp-001-psso-autofill.xml` and `app-sys-001-company-portal.xml`, plus updates to [`configurations/entra/cfg-idp-001-platform-sso.json`](configurations/entra/cfg-idp-001-platform-sso.json) and significant `mainScript.ps1` enhancements. | Chris Kunze |
+| 2026-05-18 | **Updated** README, SUPPORT, blog, and inline examples | Documentation refresh. | Neil Johnson |
+| 2026-05-14 | **Added** SwiftDialog GUI launcher | New [`Start-IntuneMyMacs.ps1`](Start-IntuneMyMacs.ps1) provides a native macOS frontend over `mainScript.ps1`. | Chris Kunze |
+| 2026-05-13 | **Fixed** open-source compliance issues | Repository housekeeping for public consumption. | Chris Kunze |
+| 2026-04-22 | **Added** fork-sync tooling | New [`tools/git-fork-sync-workflow.sh`](tools/git-fork-sync-workflow.sh) and [`tools/sync-from-upstream.sh`](tools/sync-from-upstream.sh) for keeping forks current with upstream. | Chris Kunze |
+| 2026-04-20 | **Added** recovery lock support + timezone updates | New macOS recovery lock configuration; documentation refreshed. | Chris Kunze |
+| 2026-04-16 | **Changed** onboarding to monitor-only | Onboarding flow now monitors install state instead of performing it; additional apps added. | Chris Kunze |
+| 2026-04-10 | **Removed** Set Office Default Applications script | macOS 26.4 requires user consent for every default-app change. The `utiluti`-based script now triggers multiple confirmation prompts per user, making silent deployment impossible. See [utiluti#10](https://github.com/scriptingosx/utiluti/issues/10). | Neil Johnson |
+| 2026-04-10 | **Fixed** POL-SEC-006 passkey autofill blocking | Changed `allowPasswordAutoFill` and `safariAllowAutoFill` to `true` so users can enable "AutoFill Passwords and Passkeys" during device registration. Fixes [#17](https://github.com/microsoft/intune-my-macs/issues/17). | Neil Johnson |
+| 2026-04-10 | **Fixed** POL-APP-100 deprecated MAU data collection value | Changed `AcknowledgedDataCollectionPolicy` from the deprecated "send required and optional data" to "send required data". Prevents MAU from repeatedly prompting users. Fixes [#15](https://github.com/microsoft/intune-my-macs/issues/15). | Neil Johnson |
+| 2026-04-10 | **Added** guidance against dynamic device groups | Dynamic device groups cause unpredictable enrollment delays. README now documents assignment filters as the recommended approach. Fixes [#14](https://github.com/microsoft/intune-my-macs/issues/14). | Neil Johnson |
+| 2026-03-24 | **Added** wallpaper deployment | PPPC profile, `set-wallpaper` script, and sample image. | Neil Johnson |
+| 2026-03-17 | **Fixed** legacy manifest format + added enrollment-restriction support | Resolves [#11](https://github.com/microsoft/intune-my-macs/issues/11), merged via [#12](https://github.com/microsoft/intune-my-macs/pull/12). | Neil Johnson |
+| 2026-03-11 | **Fixed** missing Graph scope + Office defaults race | Added `DeviceManagementManagedDevices.ReadWrite.All` to the required scopes; mainScript now waits for Office apps to be present before setting defaults. Also merged community PR [#9](https://github.com/microsoft/intune-my-macs/pull/9) (Remote Help download fix). | Neil Johnson, Jorge Suarez |
+| 2026-02-02 | **Fixed** Remote Help install download reliability | Switched to temporary-file download pattern and updated source URL. Community PR [#9](https://github.com/microsoft/intune-my-macs/pull/9). | Jorge Suarez |
+| 2026-01-09 | **Improved** documentation generator | Cleaner Markdown output (OpenXML page breaks now only injected during Word/pandoc conversion), new `--mde` flag to optionally include the MDE folder (excluded by default). | Neil Johnson |
+| 2025-12-22 | **Improved** Company Portal install retry logic | More resilient downloads with better failure handling. | Chris Kunze |
+| 2025-12-01 | **Fixed** SwiftDialog onboarding Company Portal install | Multiple iterations to stabilise the Company Portal download/install path; simplified `curl` invocation for reliability; line-ending fixes for macOS compatibility; improved error handling. | Chris Kunze |
+| 2025-11-18 | **Added** Microsoft Purview enablement to MDE config | Removed the legacy MDE `.mobileconfig` in favour of the settings-catalog policy. | Neil Johnson, Chris Kunze |
+| 2025-11-17 | **Added** `--apply` switch + MDM Authority guidance | `mainScript.ps1` now defaults to **dry-run**; `--apply` is required to create/update/delete Intune objects. README documents the MDM Authority prerequisite. | Neil Johnson |
+| 2025-11-14 | **Released** first public version | Removed old reference files, tidied repository, finalised README for public release. | Neil Johnson |
+| 2025-11-12 | **Updated** PRD standards + revised README | Corrected manifest and policy-naming standards documents. | Neil Johnson |
+| 2025-11-11 | **Added** `--tenant-id` flag | Multi-tenant Microsoft Graph connection support. | Chris Kunze |
+| 2025-11-07 | **Added** Remote Help install | New script to deploy Microsoft Remote Help. | Chris Kunze |
+| 2025-10-24 | **Documented** tools + added `--mde` onboarding check | Fails fast if Defender onboarding file is missing before attempting MDE deployment. | Neil Johnson |
+| 2025-10-23 | **Added** `IntuneLogWatch.pkg`, `-h` CLI help, and documentation generator | New [`tools/Generate-ConfigurationDocumentation.py`](tools/Generate-ConfigurationDocumentation.py) and [`tools/Find-DuplicatePayloadSettings.ps1`](tools/Find-DuplicatePayloadSettings.ps1); mass rename of artifacts to the standard naming scheme; SEB policies zipped. Removed the standalone M365 Copilot script (now handled inside SwiftDialog onboarding). | Neil Johnson |
+| 2025-10-22 | **Added** mSCP baseline payloads + `--security-baselines` switch | Updated SwiftDialog icons, fixed the device-rename script, added energy-management settings, and corrected autologin defaults. | Neil Johnson, Chris Kunze |
+| 2025-09-09 | **Added** more policies + fixed onboarding | Manifest revisions and onboarding-flow fixes. | Neil Johnson |
+| 2025-09-04 | **Changed** manifest from central to distributed + added `--delete-all` | Per-artifact manifest files, support for compliance policies, and a cleanup switch to remove every object previously created with the current prefix. | Neil Johnson |
+| 2025-08-20 | **Added** PKG generation with pre/post-install scripts | `mainScript.ps1` can now build PKGs and accept custom pre/post-install scripts. | Chris Kunze |
+| 2025-08-13 | **Added** `.gitignore` | | Neil Johnson |
+| 2025-08-08 | **Changed** manifest format from XML to JSON | First end-to-end proof-of-concept of `mainScript.ps1`. | Neil Johnson |
+| 2025-08-07 | **Added** first manifest + policy sanitisation guidance | Restructured folders and added instructions for sanitising exported policies before import. | Neil Johnson, Chris Kunze |
+| 2025-08-05 | **Launched** initial repository | First-draft policies, helper tools, and template README, LICENSE, SECURITY, SUPPORT, and CODE_OF_CONDUCT. | Neil Johnson |
+
+---
+
+## Contributors
+
+This project exists thanks to the people who have contributed:
+
+- **Neil Johnson** ([@theneiljohnson](https://github.com/theneiljohnson)) — Microsoft Intune Customer Experience Engineering
+- **Chris Kunze** ([@CKunze-MSFT](https://github.com/CKunze-MSFT)) — Microsoft Intune Customer Experience Engineering
+- **Jorge Suarez** ([@jorgeasaurus](https://github.com/jorgeasaurus)) — Community contributor ([#9](https://github.com/microsoft/intune-my-macs/pull/9))
+
+See the full list of contributors on the [GitHub contributors page](https://github.com/microsoft/intune-my-macs/graphs/contributors).
