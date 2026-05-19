@@ -210,21 +210,6 @@
                                     {
                                         "@odata.type": "#microsoft.graph.deviceManagementConfigurationStringSettingValue",
                                         "settingValueTemplateReference": null,
-                                        "value": "https://login.partner.microsoftonline.cn"
-                                    },
-                                    {
-                                        "@odata.type": "#microsoft.graph.deviceManagementConfigurationStringSettingValue",
-                                        "settingValueTemplateReference": null,
-                                        "value": "https://login.chinacloudapi.cn"
-                                    },
-                                    {
-                                        "@odata.type": "#microsoft.graph.deviceManagementConfigurationStringSettingValue",
-                                        "settingValueTemplateReference": null,
-                                        "value": "https://login.microsoftonline.us"
-                                    },
-                                    {
-                                        "@odata.type": "#microsoft.graph.deviceManagementConfigurationStringSettingValue",
-                                        "settingValueTemplateReference": null,
                                         "value": "https://login-us.microsoftonline.com"
                                     }
                                 ]
