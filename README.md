@@ -127,14 +127,6 @@ Assignment filters are evaluated at policy delivery time with no group-evaluatio
 
 ## Recent changes
 
-| Date | Change | Details | Author |
-|------|--------|---------|--------|
-| 2026-05-19 | **Improved** onboarding app list visuals | Animated `wait` spinner + `SF=arrow.down.circle` placeholder on every row, swapping to the real app icon as each install completes. | Neil Johnson |
-| 2026-05-18 | **Added** Platform SSO during Setup Assistant + PSSO autofill | New [`apps/Check-PSSO.zsh`](apps/Check-PSSO.zsh), `PSSOautofill.pkg`, bundled `CompanyPortal-Installer.pkg`, app manifests `app-idp-001-psso-autofill.xml` and `app-sys-001-company-portal.xml`, plus updates to [`configurations/entra/cfg-idp-001-platform-sso.json`](configurations/entra/cfg-idp-001-platform-sso.json) and significant `mainScript.ps1` enhancements. | Chris Kunze |
-| 2026-05-14 | **Added** SwiftDialog GUI launcher | New [`Start-IntuneMyMacs.ps1`](Start-IntuneMyMacs.ps1) provides a native macOS frontend over `mainScript.ps1`. | Chris Kunze |
-| 2026-04-22 | **Added** fork-sync tooling | New [`tools/git-fork-sync-workflow.sh`](tools/git-fork-sync-workflow.sh) and [`tools/sync-from-upstream.sh`](tools/sync-from-upstream.sh) for keeping forks current with upstream. | Chris Kunze |
-| 2026-04-20 | **Added** recovery lock support + timezone updates | New macOS recovery lock configuration; documentation refreshed. | Chris Kunze |
-
 See [CHANGELOG.md](CHANGELOG.md) for the full history and the list of [contributors](CHANGELOG.md#contributors).
 
 ---
