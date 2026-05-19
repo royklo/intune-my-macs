@@ -7,7 +7,8 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/en/
 > This project is a **proof of concept** and does not follow semantic versioning. Changes are recorded by date rather than release tag.
 
 | Date | Change | Details | Author |
-|------|--------|---------|--------|
+| ------ | -------- | --------- | -------- |
+| 2026-05-19 | **Removed** sovereign cloud URLs from Platform SSO config | Removed `https://login.partner.microsoftonline.cn`, `https://login.chinacloudapi.cn`, and `https://login.microsoftonline.us` from [`configurations/entra/cfg-idp-001-platform-sso.json`](configurations/entra/cfg-idp-001-platform-sso.json). Sovereign cloud tenants require their own dedicated configuration; including these URLs in the commercial profile is unnecessary. | Chris Kunze |
 | 2026-05-19 | **Improved** onboarding app list visuals | All rows in [`scripts/intune/scr-utl-100-dialog-onboarding.sh`](scripts/intune/scr-utl-100-dialog-onboarding.sh) now launch with an animated `wait` spinner and an `SF=arrow.down.circle` "queued for download" placeholder icon, then bloom into the real app bundle icon as each install is detected. Avoids the generic SwiftDialog question-mark glyph for apps not yet on disk. | Neil Johnson |
 | 2026-05-18 | **Added** Platform SSO during Setup Assistant + PSSO autofill | New [`apps/Check-PSSO.zsh`](apps/Check-PSSO.zsh), `PSSOautofill.pkg`, bundled `CompanyPortal-Installer.pkg`, app manifests `app-idp-001-psso-autofill.xml` and `app-sys-001-company-portal.xml`, plus updates to [`configurations/entra/cfg-idp-001-platform-sso.json`](configurations/entra/cfg-idp-001-platform-sso.json) and significant `mainScript.ps1` enhancements. | Chris Kunze |
 | 2026-05-18 | **Updated** README, SUPPORT, blog, and inline examples | Documentation refresh. | Neil Johnson |
