@@ -10,3 +10,6 @@ mde/cfg-mde-001-onboarding.xml
 
 # Local OSS compliance audit reports — not for check-in
 .oss-compliance/
+
+# Company Portal installer — downloaded at runtime by mainScript.ps1
+apps/CompanyPortal-Installer.pkg
