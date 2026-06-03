@@ -3,7 +3,7 @@
   <Version>1.0</Version>
   <Type>Script</Type>
   <Name>SCR-APP-102 - Install Remote Help</Name>
-  <Description>Downloads and installs Microsoft Remote Help from a signed PKG. Automatically installs Microsoft Auto Update (MAU) first and ensures Rosetta 2 is present on Apple Silicon. Performs intelligent update checking via HTTP Last-Modified headers to avoid unnecessary reinstalls. Enables IT support teams to provide remote assistance to macOS devices.</Description>
+  <Description>Downloads and installs Microsoft Remote Help from a signed PKG. Automatically installs Microsoft Auto Update (MAU) first. Performs intelligent update checking via HTTP Last-Modified headers to avoid unnecessary reinstalls. Enables IT support teams to provide remote assistance to macOS devices.</Description>
   <Platform>macOS</Platform>
   <Category>Config</Category>
   <SourceFile>scripts/intune/scr-app-102-install-remote-help.sh</SourceFile>

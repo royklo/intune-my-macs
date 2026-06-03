@@ -70,7 +70,7 @@ if [[ -z "$SOURCE_APP" || ! -d "$SOURCE_APP" ]]; then
 	exit 1
 fi
 
-ditto "$SOURCE_APP" "$INSTALL_DIR/$APP_NAME"
+ditto --noextattr --noqtn "$SOURCE_APP" "$INSTALL_DIR/$APP_NAME"
 
 log "Intune Log Watch installed to $INSTALL_DIR/$APP_NAME"
 

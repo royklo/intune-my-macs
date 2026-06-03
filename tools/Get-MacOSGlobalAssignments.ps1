@@ -1,14 +1,15 @@
 <#!
 .SYNOPSIS
-Lists macOS Intune objects (configuration policies, classic device configurations, custom configs, scripts, PKG apps) that are assigned to All Devices or All Users.
+Lists every macOS Intune object (configuration, compliance, scripts, custom attributes, apps) assigned to All Devices or All Users.
 
 .DESCRIPTION
 Queries Microsoft Graph (beta) for:
   * Settings Catalog configurationPolicies (platforms includes macOS)
-  * Classic deviceConfigurations (odata type starts with #microsoft.graph.macOS)
-  * Custom configurations (macOSCustomConfiguration)
-  * Device shell scripts (macOS shell scripts)
-  * macOS PKG Apps (#microsoft.graph.macOSPkgApp and #microsoft.graph.macOSLobApp)
+  * Classic deviceConfigurations (odata type starts with #microsoft.graph.macOS) — includes macOSCustomConfiguration
+  * deviceCompliancePolicies (#microsoft.graph.macOSCompliancePolicy)
+  * deviceShellScripts (macOS-only endpoint)
+  * deviceCustomAttributeShellScripts (macOS-only endpoint)
+  * mobileApps with any #microsoft.graph.macOS* type (PKG, LOB, DMG, Office, Edge, Defender, MDATP)
 For each object, retrieves its assignments and flags whether it is targeted to:
   - All Devices (allDevicesAssignmentTarget)
   - All Users (allLicensedUsersAssignmentTarget)
@@ -66,7 +67,7 @@ function Invoke-GraphAllPages {
         [int]$PageSize = 100
     )
     $results = @()
-    $next = "$Uri`?$top=$PageSize"
+    $next = "$Uri`?`$top=$PageSize"
     while ($next) {
         $resp = Invoke-MgGraphRequest -Method GET -Uri $next -Headers $Headers
         if ($resp.value) { $results += $resp.value }
@@ -98,19 +99,31 @@ $configPolicies = Invoke-GraphAllPages -Uri "$betaBase/deviceManagement/configur
 Write-Host 'Collecting classic deviceConfigurations (macOS types)...' -ForegroundColor Cyan
 $deviceConfigs = Invoke-GraphAllPages -Uri "$betaBase/deviceManagement/deviceConfigurations" | Where-Object { $_.'@odata.type' -like '#microsoft.graph.macOS*' }
 
+Write-Host 'Collecting deviceCompliancePolicies (macOS)...' -ForegroundColor Cyan
+$compliancePolicies = Invoke-GraphAllPages -Uri "$betaBase/deviceManagement/deviceCompliancePolicies" | Where-Object { $_.'@odata.type' -eq '#microsoft.graph.macOSCompliancePolicy' }
+
 Write-Host 'Collecting deviceShellScripts (macOS shell scripts)...' -ForegroundColor Cyan
-# Use $expand=assignments to avoid separate per-script assignment calls that 400 on some tenants
+# /assignments sub-endpoint 400s on some tenants — prefer $expand=assignments on the list.
 try {
-    $shellScriptsResponse = Invoke-MgGraphRequest -Method GET -Uri "$betaBase/deviceManagement/deviceShellScripts?$top=999&$expand=assignments"
+    $shellScriptsResponse = Invoke-MgGraphRequest -Method GET -Uri "$betaBase/deviceManagement/deviceShellScripts?`$top=999&`$expand=assignments"
     $deviceShellScripts = $shellScriptsResponse.value
 } catch {
     Write-Warning "Failed expanded retrieval of deviceShellScripts: $($_.Exception.Message). Falling back to basic list (assignments may be incomplete)."
     $deviceShellScripts = Invoke-GraphAllPages -Uri "$betaBase/deviceManagement/deviceShellScripts"
 }
- # Intune shell scripts endpoint is macOS-only, keep all
 
-Write-Host 'Collecting macOS PKG apps...' -ForegroundColor Cyan
-$mobileApps = Invoke-GraphAllPages -Uri "$betaBase/deviceAppManagement/mobileApps" | Where-Object { $_.'@odata.type' -in '#microsoft.graph.macOSPkgApp','#microsoft.graph.macOSLobApp' }
+Write-Host 'Collecting deviceCustomAttributeShellScripts (macOS)...' -ForegroundColor Cyan
+# Same /assignments quirk as deviceShellScripts — use $expand.
+try {
+    $customAttrResponse = Invoke-MgGraphRequest -Method GET -Uri "$betaBase/deviceManagement/deviceCustomAttributeShellScripts?`$top=999&`$expand=assignments"
+    $customAttrScripts = $customAttrResponse.value
+} catch {
+    Write-Warning "Failed expanded retrieval of deviceCustomAttributeShellScripts: $($_.Exception.Message). Falling back to basic list (assignments may be incomplete)."
+    $customAttrScripts = Invoke-GraphAllPages -Uri "$betaBase/deviceManagement/deviceCustomAttributeShellScripts"
+}
+
+Write-Host 'Collecting macOS mobileApps (all macOS app types)...' -ForegroundColor Cyan
+$mobileApps = Invoke-GraphAllPages -Uri "$betaBase/deviceAppManagement/mobileApps" | Where-Object { $_.'@odata.type' -like '#microsoft.graph.macOS*' }
 
 $rows = @()
 
@@ -126,6 +139,7 @@ foreach ($p in $configPolicies) {
             Id          = $p.id
             AllDevices  = $isAllDevices
             AllUsers    = $isAllUsers
+            Intent      = ''
             Platforms   = ($p.platforms -join ',')
         }
     }
@@ -147,6 +161,29 @@ foreach ($c in $deviceConfigs) {
             Id         = $c.id
             AllDevices = $isAllDevices
             AllUsers   = $isAllUsers
+            Intent     = ''
+            Platforms  = 'macOS'
+        }
+    }
+}
+
+# Compliance policies
+foreach ($cp in $compliancePolicies) {
+    $assignments = Get-AssignmentsForObject -Uri "$betaBase/deviceManagement/deviceCompliancePolicies/$($cp.id)/assignments"
+    $isAllDevices = $false; $isAllUsers = $false
+    foreach ($a in $assignments) {
+        $t = $a.target.'@odata.type'
+        if ($t -eq '#microsoft.graph.allDevicesAssignmentTarget') { $isAllDevices = $true }
+        if ($t -eq '#microsoft.graph.allLicensedUsersAssignmentTarget') { $isAllUsers = $true }
+    }
+    if ($isAllDevices -or $isAllUsers) {
+        $rows += [pscustomobject]@{
+            Type       = 'CompliancePolicy'
+            Name       = $cp.displayName
+            Id         = $cp.id
+            AllDevices = $isAllDevices
+            AllUsers   = $isAllUsers
+            Intent     = ''
             Platforms  = 'macOS'
         }
     }
@@ -154,16 +191,11 @@ foreach ($c in $deviceConfigs) {
 
 # Shell scripts (assignments already expanded when possible)
 foreach ($s in $deviceShellScripts) {
-    $expandedAssignments = @()
-    if ($s.PSObject.Properties.Name -contains 'assignments' -and $s.assignments) {
-        $expandedAssignments = $s.assignments
-    } else {
-        # Fallback (suppress 400 warnings): silently try direct endpoint
-        try {
-            $expandedAssignments = (Invoke-MgGraphRequest -Method GET -Uri "$betaBase/deviceManagement/deviceShellScripts/$($s.id)/assignments").value
-        } catch {
-            $expandedAssignments = @() # treat as none
-        }
+    # Invoke-MgGraphRequest returns a Hashtable; direct access on the key
+    # works and yields $null when absent.
+    $expandedAssignments = if ($s.assignments) { $s.assignments } else {
+        try { (Invoke-MgGraphRequest -Method GET -Uri "$betaBase/deviceManagement/deviceShellScripts/$($s.id)/assignments").value }
+        catch { @() }
     }
     $isAllDevices = $false; $isAllUsers = $false
     foreach ($a in $expandedAssignments) {
@@ -178,6 +210,32 @@ foreach ($s in $deviceShellScripts) {
             Id         = $s.id
             AllDevices = $isAllDevices
             AllUsers   = $isAllUsers
+            Intent     = ''
+            Platforms  = 'macOS'
+        }
+    }
+}
+
+# Custom attribute shell scripts (assignments already expanded when possible)
+foreach ($ca in $customAttrScripts) {
+    $expandedAssignments = if ($ca.assignments) { $ca.assignments } else {
+        try { (Invoke-MgGraphRequest -Method GET -Uri "$betaBase/deviceManagement/deviceCustomAttributeShellScripts/$($ca.id)/assignments").value }
+        catch { @() }
+    }
+    $isAllDevices = $false; $isAllUsers = $false
+    foreach ($a in $expandedAssignments) {
+        $t = $a.target.'@odata.type'
+        if ($t -eq '#microsoft.graph.allDevicesAssignmentTarget') { $isAllDevices = $true }
+        if ($t -eq '#microsoft.graph.allLicensedUsersAssignmentTarget') { $isAllUsers = $true }
+    }
+    if ($isAllDevices -or $isAllUsers) {
+        $rows += [pscustomobject]@{
+            Type       = 'CustomAttribute'
+            Name       = $ca.displayName
+            Id         = $ca.id
+            AllDevices = $isAllDevices
+            AllUsers   = $isAllUsers
+            Intent     = ''
             Platforms  = 'macOS'
         }
     }
@@ -187,10 +245,17 @@ foreach ($s in $deviceShellScripts) {
 foreach ($app in $mobileApps) {
     $assignments = Get-AssignmentsForObject -Uri "$betaBase/deviceAppManagement/mobileApps/$($app.id)/assignments"
     $isAllDevices = $false; $isAllUsers = $false
+    $intents = New-Object System.Collections.Generic.HashSet[string]
     foreach ($a in $assignments) {
         $t = $a.target.'@odata.type'
-        if ($t -eq '#microsoft.graph.allDevicesAssignmentTarget') { $isAllDevices = $true }
-        if ($t -eq '#microsoft.graph.allLicensedUsersAssignmentTarget') { $isAllUsers = $true }
+        if ($t -eq '#microsoft.graph.allDevicesAssignmentTarget') {
+            $isAllDevices = $true
+            if ($a.intent) { [void]$intents.Add([string]$a.intent) }
+        }
+        if ($t -eq '#microsoft.graph.allLicensedUsersAssignmentTarget') {
+            $isAllUsers = $true
+            if ($a.intent) { [void]$intents.Add([string]$a.intent) }
+        }
     }
     if ($isAllDevices -or $isAllUsers) {
         $rows += [pscustomobject]@{
@@ -199,6 +264,7 @@ foreach ($app in $mobileApps) {
             Id         = $app.id
             AllDevices = $isAllDevices
             AllUsers   = $isAllUsers
+            Intent     = (($intents | Sort-Object) -join ',')
             Platforms  = 'macOS'
         }
     }
@@ -306,6 +372,47 @@ if ($Unassign) {
                     Invoke-MgGraphRequest -Method POST -Uri "$betaBase/deviceManagement/deviceShellScripts/$id/assign" -Body $body | Out-Null
                     Write-Host "Removed global assignment(s) from ShellScript $id" -ForegroundColor Green
                 } catch { Write-Warning "Failed to update assignments for ShellScript $id : $($_.Exception.Message)" }
+            }
+            'CustomAttribute' {
+                $id = $item.Id
+                $assignUri = "$betaBase/deviceManagement/deviceCustomAttributeShellScripts/$id/assignments"
+                $all = @()
+                try { $all = (Invoke-MgGraphRequest -Method GET -Uri $assignUri).value } catch { }
+                if (-not $all) { continue }
+                $remaining = @()
+                foreach ($a in $all) {
+                    $t = $a.target.'@odata.type'
+                    if ($t -in '#microsoft.graph.allDevicesAssignmentTarget','#microsoft.graph.allLicensedUsersAssignmentTarget') { continue }
+                    $remaining += @{
+                        '@odata.type' = '#microsoft.graph.deviceManagementScriptAssignment'
+                        target        = $a.target
+                    }
+                }
+                $body = @{ deviceManagementScriptAssignments = $remaining } | ConvertTo-Json -Depth 6
+                try {
+                    Invoke-MgGraphRequest -Method POST -Uri "$betaBase/deviceManagement/deviceCustomAttributeShellScripts/$id/assign" -Body $body | Out-Null
+                    Write-Host "Removed global assignment(s) from CustomAttribute $id" -ForegroundColor Green
+                } catch { Write-Warning "Failed to update assignments for CustomAttribute $id : $($_.Exception.Message)" }
+            }
+            'CompliancePolicy' {
+                $id = $item.Id
+                $assignUri = "$betaBase/deviceManagement/deviceCompliancePolicies/$id/assignments"
+                $all = (Invoke-MgGraphRequest -Method GET -Uri $assignUri).value
+                if (-not $all) { continue }
+                $remaining = @()
+                foreach ($a in $all) {
+                    $t = $a.target.'@odata.type'
+                    if ($t -in '#microsoft.graph.allDevicesAssignmentTarget','#microsoft.graph.allLicensedUsersAssignmentTarget') { continue }
+                    $remaining += @{
+                        '@odata.type' = '#microsoft.graph.deviceCompliancePolicyAssignment'
+                        target        = $a.target
+                    }
+                }
+                $body = @{ assignments = $remaining } | ConvertTo-Json -Depth 6
+                try {
+                    Invoke-MgGraphRequest -Method POST -Uri "$betaBase/deviceManagement/deviceCompliancePolicies/$id/assign" -Body $body | Out-Null
+                    Write-Host "Removed global assignment(s) from CompliancePolicy $id" -ForegroundColor Green
+                } catch { Write-Warning "Failed to update assignments for CompliancePolicy $id : $($_.Exception.Message)" }
             }
         }
     }

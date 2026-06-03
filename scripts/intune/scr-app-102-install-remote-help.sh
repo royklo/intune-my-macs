@@ -9,7 +9,6 @@
 ## Summary
 ## - Downloads and installs Microsoft Remote Help on macOS using a signed PKG.
 ## - Installs Microsoft Auto Update (MAU) first to ensure update channel is available.
-## - On Apple silicon, ensures Rosetta 2 is present (installs if required).
 ## - If Remote Help is already installed and autoUpdate=true, exits without changes.
 ## - Otherwise performs an update check via HTTP Last-Modified and a local meta file, then installs/updates.
 ## - Optionally terminates running Remote Help process before install when configured.
@@ -28,7 +27,7 @@
 ## Requirements
 ## - macOS 11 or later
 ## - Root privileges
-## - Built-ins: curl, installer, softwareupdate, rsync
+## - Built-ins: curl, installer, rsync
 ##
 ## Exit codes
 ## - 0: Success (installed or no action required)
@@ -128,36 +127,6 @@ waitForProcess () {
         sleep $delay
     done
     echo "$(date -u "+%Y-%m-%d %H:%M:%S UTC") | No instances of [$processName] found, safe to proceed"
-}
-
-# check if we need Rosetta 2
-checkForRosetta2 () {
-    #################################################################################################################
-    #################################################################################################################
-    echo "$(date -u "+%Y-%m-%d %H:%M:%S UTC") | Checking if we need Rosetta 2 or not"
-    waitForProcess "/usr/sbin/softwareupdate"
-    OLDIFS=$IFS
-    IFS='.' read osvers_major osvers_minor osvers_dot_version <<< "$(/usr/bin/sw_vers -productVersion)"
-    IFS=$OLDIFS
-    if [[ ${osvers_major} -ge 11 ]]; then
-        processor=$(/usr/sbin/sysctl -n machdep.cpu.brand_string | grep -o "Intel")
-        if [[ -n "$processor" ]]; then
-            echo "$(date -u "+%Y-%m-%d %H:%M:%S UTC") | $processor processor installed. No need to install Rosetta."
-        else
-            if /usr/bin/pgrep oahd >/dev/null 2>&1; then
-                echo "$(date -u "+%Y-%m-%d %H:%M:%S UTC") | Rosetta is already installed and running. Nothing to do."
-            else
-                /usr/sbin/softwareupdate --install-rosetta --agree-to-license
-                if [[ $? -eq 0 ]]; then
-                    echo "$(date -u "+%Y-%m-%d %H:%M:%S UTC") | Rosetta has been successfully installed."
-                else
-                    echo "$(date -u "+%Y-%m-%d %H:%M:%S UTC") | Rosetta installation failed!"
-                fi
-            fi
-        fi
-    else
-        echo "$(date -u "+%Y-%m-%d %H:%M:%S UTC") | Mac is running macOS $osvers_major.$osvers_minor.$osvers_dot_version. No need to install Rosetta."
-    fi
 }
 
 # Update the last modified date for this app
@@ -303,7 +272,6 @@ echo "# $(date -u "+%Y-%m-%d %H:%M:%S UTC") | Logging install of [$appname] to [
 echo "############################################################"
 echo ""
 
-checkForRosetta2
 updateCheck
 waitForDesktop
 

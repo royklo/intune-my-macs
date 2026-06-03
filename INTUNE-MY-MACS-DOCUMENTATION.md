@@ -519,7 +519,7 @@ No payload settings discovered.
 
 ### scr-app-100-install-company-portal (Script)
 
-Downloads and installs Microsoft Company Portal from a signed PKG. Automatically installs Microsoft Auto Update (MAU) first and ensures Rosetta 2 is present on Apple Silicon. Performs intelligent update checking via HTTP Last-Modified headers to avoid unnecessary reinstalls.
+Downloads and installs Microsoft Company Portal from a signed PKG. Automatically installs Microsoft Auto Update (MAU) first. Performs intelligent update checking via HTTP Last-Modified headers to avoid unnecessary reinstalls.
 
 **Source:** `scripts/intune/scr-app-100-install-company-portal.sh`  
 **Settings:** 4
@@ -547,7 +547,7 @@ Downloads and installs Microsoft Edge from the official Microsoft download URL. 
 
 ### scr-app-102-install-remote-help (Script)
 
-Downloads and installs Microsoft Remote Help from a signed PKG. Automatically installs Microsoft Auto Update (MAU) first and ensures Rosetta 2 is present on Apple Silicon. Performs intelligent update checking via HTTP Last-Modified headers to avoid unnecessary reinstalls. Enables IT support teams to provide remote assistance to macOS devices.
+Downloads and installs Microsoft Remote Help from a signed PKG. Automatically installs Microsoft Auto Update (MAU) first. Performs intelligent update checking via HTTP Last-Modified headers to avoid unnecessary reinstalls. Enables IT support teams to provide remote assistance to macOS devices.
 
 **Source:** `scripts/intune/scr-app-102-install-remote-help.sh`  
 **Settings:** 4

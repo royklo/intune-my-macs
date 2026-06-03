@@ -9,7 +9,6 @@
 ## Summary
 ## - Downloads and installs the latest Microsoft Defender for Endpoint for macOS (PKG).
 ## - Ensures Microsoft 365 core apps (optional list) have finished installing first (to avoid network extension impact).
-## - Installs Rosetta 2 on Apple silicon if required.
 ## - Skips install if already present and autoUpdate=true.
 ## - Uses HTTP Last-Modified header + local meta file to decide if update required.
 ## - Updates Octory status when Octory is installed and running.
@@ -83,27 +82,6 @@ waitForProcess () {
     sleep $delay
   done
   echo "$(date -u "+%Y-%m-%d %H:%M:%S UTC") | No instances of [$processName] found"
-}
-
-checkForRosetta2 () {
-  echo "$(date -u "+%Y-%m-%d %H:%M:%S UTC") | Checking for Rosetta 2"
-  waitForProcess "/usr/sbin/softwareupdate"
-  local osvers_major osvers_minor osvers_dot
-  IFS='.' read osvers_major osvers_minor osvers_dot <<< "$(/usr/bin/sw_vers -productVersion)"
-  if [[ ${osvers_major} -ge 11 ]]; then
-    if /usr/sbin/sysctl -n machdep.cpu.brand_string | grep -q "Intel"; then
-      echo "$(date -u "+%Y-%m-%d %H:%M:%S UTC") | Intel CPU detected - Rosetta not needed"
-    else
-      if pgrep oahd >/dev/null 2>&1; then
-        echo "$(date -u "+%Y-%m-%d %H:%M:%S UTC") | Rosetta already installed"
-      else
-        /usr/sbin/softwareupdate --install-rosetta --agree-to-license && \
-          echo "$(date -u "+%Y-%m-%d %H:%M:%S UTC") | Rosetta installed" || echo "$(date -u "+%Y-%m-%d %H:%M:%S UTC") | Rosetta install failed"
-      fi
-    fi
-  else
-    echo "$(date -u "+%Y-%m-%d %H:%M:%S UTC") | macOS < 11 - Rosetta not required"
-  fi
 }
 
 fetchLastModifiedDate () {
@@ -212,7 +190,6 @@ startLog
 
 echo ""; echo "##############################################################"; echo "# $(date -u "+%Y-%m-%d %H:%M:%S UTC") | Logging install of [$appname] to [$log]"; echo "############################################################"; echo ""
 
-checkForRosetta2
 updateCheck
 waitForDesktop
 waitForOtherApps

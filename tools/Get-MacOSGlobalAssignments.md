@@ -12,8 +12,10 @@ This script queries Microsoft Graph to find macOS-related Intune configurations 
 | ------------ | ------------------- | ------------- |
 | **Settings Catalog Policies** | `configurationPolicies` | Modern Intune settings catalog policies targeting macOS |
 | **Device Configurations** | `deviceConfigurations` | Classic device configuration profiles (custom configs, endpoint protection, etc.) |
+| **Compliance Policies** | `deviceCompliancePolicies` | `macOSCompliancePolicy` objects |
 | **Shell Scripts** | `deviceShellScripts` | macOS shell scripts deployed via Intune |
-| **macOS Apps** | `mobileApps` | PKG and LOB apps (`macOSPkgApp`, `macOSLobApp`) |
+| **Custom Attributes** | `deviceCustomAttributeShellScripts` | macOS custom attribute shell scripts |
+| **macOS Apps** | `mobileApps` | Any `#microsoft.graph.macOS*` app type — PKG, LOB, DMG, Office Suite, Edge, Defender, MDATP |
 
 ### What It Detects
 
@@ -44,15 +46,20 @@ Output:
 ```text
 Collecting configurationPolicies (settings catalog macOS)...
 Collecting classic deviceConfigurations (macOS types)...
+Collecting deviceCompliancePolicies (macOS)...
 Collecting deviceShellScripts (macOS shell scripts)...
-Collecting macOS PKG apps...
+Collecting deviceCustomAttributeShellScripts (macOS)...
+Collecting macOS mobileApps (all macOS app types)...
 
-Type                  Name                           Id                                   AllDevices AllUsers Platforms
-----                  ----                           --                                   ---------- -------- ---------
-DeviceConfiguration   FileVault Policy               abc12345-...                         True       False    macOS
-SettingsCatalogPolicy macOS Security Baseline        def67890-...                         True       True     macOS
-ShellScript           Install Rosetta                ghi11111-...                         True       False    macOS
-macOSApp              Company Portal                 jkl22222-...                         False      True     macOS
+Type                  Name                           Id              AllDevices AllUsers Intent   Platforms
+----                  ----                           --              ---------- -------- ------   ---------
+CompliancePolicy      macOS Baseline Compliance      a1b2...                True    False          macOS
+CustomAttribute       Rosetta Installed              c3d4...                True    False          macOS
+DeviceConfiguration   FileVault Policy               abc1...                True    False          macOS
+SettingsCatalogPolicy macOS Security Baseline        def6...                True     True          macOS
+ShellScript           Rosetta Check First Run Script 0b6c...                True    False          macOS
+macOSApp              Company Portal                 jkl2...               False     True available macOS
+macOSApp              Microsoft Defender             m3n4...                True    False required macOS
 ```
 
 ### Parameters
@@ -106,11 +113,12 @@ pwsh ./tools/Get-MacOSGlobalAssignments.ps1 -Unassign -Force
 
 | Column | Description |
 | -------- | ------------- |
-| `Type` | Object type: `SettingsCatalogPolicy`, `DeviceConfiguration`, `ShellScript`, `macOSApp` |
+| `Type` | Object type: `SettingsCatalogPolicy`, `DeviceConfiguration`, `CompliancePolicy`, `ShellScript`, `CustomAttribute`, `macOSApp` |
 | `Name` | Display name of the object |
 | `Id` | Intune object GUID |
 | `AllDevices` | `True` if assigned to All Devices |
 | `AllUsers` | `True` if assigned to All Users |
+| `Intent` | App install intent for the global assignment(s): `required`, `available`, `availableWithoutEnrollment`, `uninstall`, or a comma-separated combination. Empty for non-app rows. |
 | `Platforms` | Platform(s) the object targets |
 
 ### CSV Export
@@ -127,10 +135,22 @@ Same columns as console output, suitable for Excel or reporting tools.
     "Id": "abc12345-6789-0123-4567-890abcdef012",
     "AllDevices": true,
     "AllUsers": false,
+    "Intent": "",
+    "Platforms": "macOS"
+  },
+  {
+    "Type": "macOSApp",
+    "Name": "Microsoft Defender",
+    "Id": "m3n4o5p6-...",
+    "AllDevices": true,
+    "AllUsers": false,
+    "Intent": "required",
     "Platforms": "macOS"
   }
 ]
 ```
+
+> **Note on `Intent`:** the value reflects only the App's All Devices / All Users assignment(s). Group-scoped assignments (and their intents) are not surfaced because this tool's scope is global targeting. A value like `available,required` indicates the same app is globally assigned twice with different intents — itself a useful signal.
 
 ## The `-Unassign` Feature
 
@@ -257,5 +277,6 @@ if ($results) {
 ## Notes
 
 - Uses Microsoft Graph **beta** endpoint for full macOS support
-- Shell scripts endpoint (`deviceShellScripts`) is macOS-specific; no platform filter needed
+- Shell scripts (`deviceShellScripts`) and custom attribute shell scripts (`deviceCustomAttributeShellScripts`) are macOS-only endpoints; no platform filter is needed for those
+- For shell scripts and custom attributes, assignments are fetched via `$expand=assignments` on the list endpoint because the per-object `/assignments` sub-endpoint returns HTTP 400 on some tenants
 - The script only surfaces macOS objects, even though some APIs return cross-platform data

@@ -32,12 +32,11 @@ Output:
 ```text
 Items returned: 12
 
- 1. [Script] scr-app-001-install-rosetta (Assigned: Yes)
- 2. [Script] scr-app-002-install-homebrew (Assigned: Yes)
- 3. [App] Company Portal (Assigned: Yes)
- 4. [App] Microsoft Edge (Assigned: Yes)
- 5. [Script] scr-cfg-001-set-timezone (Assigned: Yes)
- 6. [Script] scr-cfg-002-configure-dock (Assigned: Yes)
+ 1. [Script] scr-app-002-install-homebrew (Assigned: Yes)
+ 2. [App] Company Portal (Assigned: Yes)
+ 3. [App] Microsoft Edge (Assigned: Yes)
+ 4. [Script] scr-cfg-001-set-timezone (Assigned: Yes)
+ 5. [Script] scr-cfg-002-configure-dock (Assigned: Yes)
 ...
 ```
 

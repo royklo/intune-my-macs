@@ -1,0 +1,13 @@
+<MacIntuneManifest>
+  <ReferenceId>CAT-SYS-102</ReferenceId>
+  <Version>1.0</Version>
+  <Type>CustomAttribute</Type>
+  <Name>CAT-SYS-102 - Rosetta 2 Installed</Name>
+  <Description>Returns "true" if Rosetta 2 is installed and working on this Mac, otherwise "false". Detection runs an x86_64 binary through `arch` as a functional test of the Rosetta runtime. Intel Macs always return "false" because Rosetta does not apply.</Description>
+  <Platform>macOS</Platform>
+  <Category>Device Information</Category>
+  <SourceFile>custom attributes/cat-sys-102-rosetta-installed.zsh</SourceFile>
+  <CustomAttribute>
+    <CustomAttributeType>string</CustomAttributeType>
+  </CustomAttribute>
+</MacIntuneManifest>
