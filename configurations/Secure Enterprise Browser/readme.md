@@ -40,7 +40,27 @@ pwsh ./mainScript.ps1 --assign-group="your-security-group"
 
 The script will automatically discover and deploy the Edge browser policy you've included.
 
-## 📊 Policy Comparison
+## � How Microsoft Edge updates (not via MAU)
+
+Microsoft Edge for macOS **does not update through Microsoft AutoUpdate (MAU)**. MAU
+(`com.microsoft.autoupdate2`) services Office and other Microsoft apps such as Company
+Portal, Teams, and Defender — but **not** Edge.
+
+Edge ships and updates its own dedicated updater, **Microsoft Edge Update**
+(`EdgeUpdater`, bundle ID `com.microsoft.EdgeUpdater`), which runs independently of MAU.
+These browser policies configure Edge behaviour only; they do not change the update
+channel. Keep the two mental models separate:
+
+| App | Updater | Notes |
+|-----|---------|-------|
+| Microsoft Edge | Microsoft Edge Update (`EdgeUpdater`) | Self-contained; installed alongside Edge. Managed via Edge update policies, not MAU. |
+| Office, Company Portal, Teams, Defender | Microsoft AutoUpdate (MAU) | Office-family updater. Does **not** update Edge. |
+
+The bundled installer script [`scripts/intune/scr-app-101-install-edge.sh`](../../scripts/intune/scr-app-101-install-edge.sh)
+sets `autoUpdate="true"`, meaning once Edge is installed it keeps itself current through
+`EdgeUpdater` and the script will not attempt to re-deploy it.
+
+## �📊 Policy Comparison
 
 ### Level 1 - Basic Security (POL-APP-101)
 

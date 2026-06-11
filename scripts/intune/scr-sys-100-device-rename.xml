@@ -3,7 +3,7 @@
   <Version>1.0</Version>
   <Type>Script</Type>
   <Name>SCR-SYS-100 - Device Rename</Name>
-  <Description>Automatically renames Mac devices using a standardized naming convention based on enrollment type (ADE/BYOD), device model type (MBA/MBP/iMac/etc), serial number, and detected country code via IP geolocation. Differentiates between corporate (ABM-enrolled) and personal (manually-enrolled) devices with configurable prefixes.</Description>
+  <Description>Automatically renames Mac devices using a standardized naming convention based on enrollment type (ADE/BYOD), device model type (MBA/MBP/iMac/etc), serial number, and detected country code via IP geolocation. Differentiates between corporate (ABM-enrolled) and personal (manually-enrolled) devices with configurable prefixes. NOTE: country detection relies on external services (myip.opendns.com + ipapi.co) and is unreliable on air-gapped, proxied, or VPN/hair-pinned networks; set the CountryOverride variable at the top of the script to a fixed two-letter code to bypass the lookup.</Description>
   <Platform>macOS</Platform>
   <Category>Config</Category>
   <SourceFile>scripts/intune/scr-sys-100-device-rename.sh</SourceFile>

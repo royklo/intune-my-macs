@@ -82,7 +82,7 @@
                     {
                         "@odata.type": "#microsoft.graph.deviceManagementConfigurationStringSettingValue",
                         "settingValueTemplateReference": null,
-                        "value": "*.arnab.fun"
+                        "value": "*.contoso.com"
                     }
                 ]
             }

@@ -112,7 +112,7 @@ Returns the version of the Microsoft Intune Agent (Sidecar) installed on the Mac
 
 ### pol-idp-001-platform-sso (Policy)
 
-Platform Single Sign-On (SSO) configuration for Microsoft Entra ID on macOS.
+Platform Single Sign-On (SSO) configuration for Microsoft Entra ID on macOS. NOTE: choice settings export as numeric values but the Settings Catalog UI shows names. See the numeric-to-name mapping below.
 
 **Source:** `configurations/entra/pol-idp-001-platform-sso.json`  
 **Settings:** 15
@@ -133,6 +133,17 @@ Platform Single Sign-On (SSO) configuration for Microsoft Entra ID on macOS.
 | `com.apple.extensiblesso_urls[0]` | `https://login.microsoftonline.com` |
 | `com.apple.extensiblesso_urls[1]` | `https://login.microsoft.com` |
 | `com.apple.extensiblesso_urls[2]` | `https://sts.windows.net` |
+
+**Numeric-to-name mapping (choice settings)**
+
+The Settings Catalog stores these choices as numbers, while the Intune admin center UI shows names:
+
+| Setting | Shipped value | Settings Catalog UI name | Other options |
+| --- | --- | --- | --- |
+| `com.apple.extensiblesso_platformsso_authenticationmethod` | `1` | UserSecureEnclaveKey | `0` = Password, `2` = SmartCard |
+| `com.apple.extensiblesso_authenticationmethod` (deprecated, macOS 13) | `1` | UserSecureEnclaveKey | `0` = Password |
+| `com.apple.extensiblesso_platformsso_userauthorizationmode` | `1` | Admin | `0` = Standard, `2` = Groups |
+| `com.apple.extensiblesso_type` | `1` | Redirect | `0` = Credential |
 | `com.apple.extensiblesso_urls[3]` | `https://login-us.microsoftonline.com` |
 
 ### cfg-sec-001-login-window (CustomConfig)
@@ -195,7 +206,7 @@ Baseline compliance: FileVault required, Firewall enabled, SIP enabled, minimum 
 
 ### pol-app-100-office (Policy)
 
-Configures Microsoft 365 Office update, channel, auto sign-in, diagnostic, activation, and Outlook experience settings.
+Configures Microsoft 365 Office update, channel, auto sign-in, diagnostic, activation, and Outlook experience settings. NOTE: AcknowledgedDataCollectionPolicy uses the integer/choice form (value 0 = required data only). MAU deprecated the legacy string form after early-2026 Office for Mac releases - only the numeric value is honoured; a string value silently reverts to the user default and re-prompts users.
 
 **Source:** `configurations/intune/pol-app-100-office.json`  
 **Settings:** 15
@@ -220,7 +231,7 @@ Configures Microsoft 365 Office update, channel, auto sign-in, diagnostic, activ
 
 ### pol-app-101-edge-level1 (Policy)
 
-Enhanced basic browser configuration for Microsoft Edge addressing gap analysis findings (Certificate management, network policies, system integration)
+Enhanced basic browser configuration for Microsoft Edge addressing gap analysis findings (Certificate management, network policies, system integration). NOTE: AutoSelectCertificateForUrls ships with the placeholder domain *.contoso.com - replace it with your own URL pattern before deploying, or remove the setting if you do not use automatic client-certificate selection.
 
 **Source:** `configurations/Secure Enterprise Browser/pol-app-101-edge-level1.json`  
 **Settings:** 22
@@ -231,7 +242,7 @@ Enhanced basic browser configuration for Microsoft Edge addressing gap analysis 
 | `com.apple.managedclient.preferences_importsavedpasswords` | `False` |
 | `com.apple.managedclient.preferences_personalizationreportingenabled` | `False` |
 | `com.apple.managedclient.preferences_quicallowed` | `False` |
-| `com.apple.managedclient.preferences_autoselectcertificateforurls[0]` | `*.arnab.fun` |
+| `com.apple.managedclient.preferences_autoselectcertificateforurls[0]` | `*.contoso.com` |
 | `com.apple.managedclient.preferences_trackingprevention` | `3` |
 | `com.apple.managedclient.preferences_automatichttpsdefault` | `2` |
 | `com.apple.managedclient.preferences_smartscreenenabled` | `True` |
@@ -324,7 +335,7 @@ Configures comprehensive screensaver security settings to protect unattended dev
 
 ### pol-sec-006-restrictions (Policy)
 
-Comprehensive security policy for macOS devices that restricts various system features and applications to enhance enterprise security. Disables AirDrop, Activity Continuation, Game Center, cloud services, App Store, and other potentially risky features while maintaining core business functionality.
+Comprehensive security policy for macOS devices that restricts various system features and applications to enhance enterprise security. Disables AirDrop, Activity Continuation, Game Center, cloud services, App Store, and other potentially risky features while maintaining core business functionality. NOTE: Apple's allowRosettaUsageAwareness key (com.apple.applicationaccess) shipped in Intune service release 2604 (April 2026) but is intentionally NOT set here - this project deploys only native/universal apps and removed Rosetta 2 (see CHANGELOG 2026-06-03). To enforce Rosetta posture, add the setting in the Settings Catalog under Restrictions and set it explicitly (default-deny) for your environment.
 
 **Source:** `configurations/intune/pol-sec-006-restrictions.json`  
 **Settings:** 80
@@ -414,7 +425,7 @@ Comprehensive security policy for macOS devices that restricts various system fe
 
 ### pol-sec-007-recovery-lock (Policy)
 
-Enables Recovery Lock on Apple Silicon Macs to prevent unauthorized access to macOS Recovery. When enabled, a password is required to access Recovery mode, adding an additional layer of security against physical attacks and unauthorized system modifications.
+Enables Recovery Lock on Apple Silicon Macs to prevent unauthorized access to macOS Recovery. When enabled, a password is required to access Recovery mode, adding an additional layer of security against physical attacks and unauthorized system modifications. NOTE: this profile ships with the password rotation schedule set to 0, which means the Recovery Lock password is NEVER rotated automatically. For production, set a non-zero rotation period (for example 30, 60, or 90 days) so the escrowed password is refreshed on a schedule.
 
 **Source:** `configurations/intune/pol-sec-007-recovery-lock.json`  
 **Settings:** 2
@@ -645,7 +656,7 @@ Downloads and installs the latest release of Escrow Buddy security agent plugin 
 
 ### scr-sys-100-device-rename (Script)
 
-Automatically renames Mac devices using a standardized naming convention based on enrollment type (ADE/BYOD), device model type (MBA/MBP/iMac/etc), serial number, and detected country code via IP geolocation. Differentiates between corporate (ABM-enrolled) and personal (manually-enrolled) devices with configurable prefixes.
+Automatically renames Mac devices using a standardized naming convention based on enrollment type (ADE/BYOD), device model type (MBA/MBP/iMac/etc), serial number, and detected country code via IP geolocation. Differentiates between corporate (ABM-enrolled) and personal (manually-enrolled) devices with configurable prefixes. NOTE: country detection relies on external services (myip.opendns.com + ipapi.co) and is unreliable on air-gapped, proxied, or VPN/hair-pinned networks; set the CountryOverride variable at the top of the script to a fixed two-letter code to bypass the lookup.
 
 **Source:** `scripts/intune/scr-sys-100-device-rename.sh`  
 **Settings:** 4

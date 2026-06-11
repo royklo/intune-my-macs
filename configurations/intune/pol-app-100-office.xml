@@ -3,7 +3,7 @@
   <Version>1.0</Version>
   <Type>Policy</Type>
   <Name>POL-APP-100 - Microsoft Office Configuration</Name>
-  <Description>Configures Microsoft 365 Office update, channel, auto sign-in, diagnostic, activation, and Outlook experience settings.</Description>
+  <Description>Configures Microsoft 365 Office update, channel, auto sign-in, diagnostic, activation, and Outlook experience settings. NOTE: AcknowledgedDataCollectionPolicy uses the integer/choice form (value 0 = required data only). MAU deprecated the legacy string form after early-2026 Office for Mac releases - only the numeric value is honoured; a string value silently reverts to the user default and re-prompts users.</Description>
   <Platform>macOS</Platform>
   <Category>Office</Category>
   <SourceFile>configurations/intune/pol-app-100-office.json</SourceFile>

@@ -26,6 +26,25 @@ PersonalPrefix="BYO"
 ABMOnly="false"
 EnforceBYOD="false"
 
+## Country code source
+## --------------------
+## By default this script derives the two-letter country code from the device's
+## public IP using an external DNS lookup (myip.opendns.com) and an external
+## geolocation API (ipapi.co). This dependency is FRAGILE and may produce a wrong
+## or empty value on:
+##   - Air-gapped or proxy-only networks (no direct egress to ipapi.co)
+##   - VPN / split-tunnel / hair-pinned egress (IP geolocates to the VPN exit, not the user)
+##   - Carrier-grade NAT or misleading egress IPs
+## If the lookup fails, the country segment of the name is simply omitted.
+##
+## MDM-variable alternative (recommended for managed fleets):
+## Set CountryOverride below to a fixed two-letter code (e.g. "GB", "US", "DE")
+## to skip the network lookup entirely. You can also template this value per
+## region by deploying region-specific copies of the script, or replace it with
+## a value your management tooling injects at deploy time. When CountryOverride
+## is non-empty the external IP/geolocation calls are NOT made.
+CountryOverride=""
+
 ## Check if the log directory has been created
 if [ -d "$logandmetadir" ]; then
     ## Already created
@@ -97,9 +116,19 @@ fi
 
 
 ## What is our public IP
-echo " $(date -u "+%Y-%m-%d %H:%M:%S UTC") | Looking up public IP"
-myip=$(dig +short myip.opendns.com @resolver1.opendns.com)
-Country=$(curl -s -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.69' https://ipapi.co/$myip/country)
+## NOTE: This block depends on outbound access to myip.opendns.com (DNS) and
+## ipapi.co (HTTPS). It is unreliable on air-gapped, proxied, or VPN/hair-pinned
+## networks and may geolocate to the wrong country. Set CountryOverride at the
+## top of this script to bypass the lookup. If neither the override nor the
+## lookup yields a value, the country segment is omitted from the device name.
+if [[ -n "$CountryOverride" ]]; then
+  Country="$CountryOverride"
+  echo " $(date -u "+%Y-%m-%d %H:%M:%S UTC") | Using CountryOverride value: $Country (skipping IP geolocation)"
+else
+  echo " $(date -u "+%Y-%m-%d %H:%M:%S UTC") | Looking up public IP (external dependency: myip.opendns.com + ipapi.co)"
+  myip=$(dig +short myip.opendns.com @resolver1.opendns.com)
+  Country=$(curl -s -A 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.69' https://ipapi.co/$myip/country)
+fi
 
 
 echo " $(date -u "+%Y-%m-%d %H:%M:%S UTC") | Generating four characters code based on retrieved model name $ModelName"

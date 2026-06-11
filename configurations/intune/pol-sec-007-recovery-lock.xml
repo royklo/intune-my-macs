@@ -3,7 +3,7 @@
   <Version>1.0</Version>
 	<Type>Policy</Type>
 	<Name>POL-SEC-007 - Recovery Lock</Name>
-	<Description>Enables Recovery Lock on Apple Silicon Macs to prevent unauthorized access to macOS Recovery. When enabled, a password is required to access Recovery mode, adding an additional layer of security against physical attacks and unauthorized system modifications.</Description>
+	<Description>Enables Recovery Lock on Apple Silicon Macs to prevent unauthorized access to macOS Recovery. When enabled, a password is required to access Recovery mode, adding an additional layer of security against physical attacks and unauthorized system modifications. NOTE: this profile ships with the password rotation schedule set to 0, which means the Recovery Lock password is NEVER rotated automatically. For production, set a non-zero rotation period (for example 30, 60, or 90 days) so the escrowed password is refreshed on a schedule.</Description>
 	<Platform>macOS</Platform>
 	<Category>Security</Category>
 	<SourceFile>configurations/intune/pol-sec-007-recovery-lock.json</SourceFile>

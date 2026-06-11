@@ -94,6 +94,21 @@ For the full artifact catalog and settings, see `INTUNE-MY-MACS-DOCUMENTATION.md
 
 ---
 
+## Platform SSO value reference (numeric → UI name)
+
+The Entra Platform SSO policy (`configurations/entra/pol-idp-001-platform-sso.json`) stores its choices as **numbers**, but the Intune Settings Catalog UI shows **names**. Use this table to map between them:
+
+| Setting | Shipped value | Settings Catalog UI name | Other options |
+| --- | --- | --- | --- |
+| `com.apple.extensiblesso_platformsso_authenticationmethod` | `1` | UserSecureEnclaveKey | `0` = Password, `2` = SmartCard |
+| `com.apple.extensiblesso_authenticationmethod` (deprecated, macOS 13) | `1` | UserSecureEnclaveKey | `0` = Password |
+| `com.apple.extensiblesso_platformsso_userauthorizationmode` | `1` | Admin | `0` = Standard, `2` = Groups |
+| `com.apple.extensiblesso_type` | `1` | Redirect | `0` = Credential |
+
+> At least one **Admin** user is required on a device before **Standard** authorization mode can be used. See [Configure Platform SSO for macOS](https://learn.microsoft.com/intune/device-configuration/settings-catalog/configure-platform-sso-macos).
+
+---
+
 ## Learn more
 - [`INTUNE-MY-MACS-DOCUMENTATION.md`](INTUNE-MY-MACS-DOCUMENTATION.md) – overview of every artifact.
 - [`mde/README.md`](mde/README.md) – Defender prerequisites and onboarding steps.

@@ -14,8 +14,22 @@ Logs are written to `/Library/Logs/Microsoft/IntuneScripts/checkPSSO/Check-PSSO.
 ## Requirements
 
 - macOS 13 (Ventura) or later
-- Company Portal installed on the device
+- Company Portal installed on the device — see the version floors below
 - Platform SSO configured via an Intune SSO extension profile
+
+### Company Portal version floors (two flows)
+
+The minimum Company Portal version depends on **which Platform SSO flow** you use. These
+are two different floors — do not assume a single "5.2604.0+" everywhere:
+
+| Flow | Minimum Company Portal |
+|------|------------------------|
+| **General Platform SSO** (registration after the user reaches the desktop) | **5.2404.0+** |
+| **Platform SSO during ADE / Setup Assistant** (registration during Automated Device Enrollment) | **5.2604.0+** |
+
+The PKG bundled with this project (`APP-SYS-001`, `apps/CompanyPortal-Installer.pkg`) ships
+`5.2604.1`, which satisfies **both** flows. If you supply your own Company Portal build,
+pick the floor that matches the flow you are deploying.
 
 ## Deploying via Payloadless PKG in Intune
 

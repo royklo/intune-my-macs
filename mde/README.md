@@ -6,6 +6,27 @@ This folder adds optional Microsoft Defender for Endpoint (MDE) artifacts on top
 
 ---
 
+## 0. Prerequisite: Company Portal must be installed first
+
+Microsoft Defender for Endpoint depends on the device being enrolled and managed, which
+requires **Microsoft Company Portal** to be present. The MDE install script
+([`scr-mde-100-install-defender.zsh`](scr-mde-100-install-defender.zsh)) assumes Company
+Portal (and the resulting management channel) already exists on the device, so Company
+Portal must be deployed and installed **before** MDE onboarding runs.
+
+**Pick one canonical Company Portal install path — do not use both:**
+
+| Path | Artifact | When to use |
+|------|----------|-------------|
+| **Managed app (recommended/canonical)** | `APP-SYS-001` PKG ([`apps/CompanyPortal-Installer.pkg`](../apps/CompanyPortal-Installer.pkg)) deployed as a required macOS PKG app (VPP/managed). | Standard deployments. Intune installs Company Portal as a managed app before scripts run. |
+| **Script install (alternative)** | [`scr-app-100-install-company-portal.sh`](../scripts/intune/scr-app-100-install-company-portal.sh) | Only when you cannot use the managed PKG app. |
+
+Deploying Company Portal via **both** the managed PKG app and the install script at the
+same time causes duplicate installs and update-detection conflicts. Choose one path,
+confirm Company Portal is installed, and only then enable `--mde`.
+
+---
+
 ## 1. What you need before `--mde`
 
 `mainScript.ps1` will only deploy MDE content when you pass the `--mde` switch **and** both of the following exist in this folder:

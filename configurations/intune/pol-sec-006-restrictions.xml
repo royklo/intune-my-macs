@@ -3,7 +3,7 @@
   <Version>1.0</Version>
 	<Type>Policy</Type>
 	<Name>POL-SEC-006 - System Restrictions</Name>
-	<Description>Comprehensive security policy for macOS devices that restricts various system features and applications to enhance enterprise security. Disables AirDrop, Activity Continuation, Game Center, cloud services, App Store, and other potentially risky features while maintaining core business functionality.</Description>
+	<Description>Comprehensive security policy for macOS devices that restricts various system features and applications to enhance enterprise security. Disables AirDrop, Activity Continuation, Game Center, cloud services, App Store, and other potentially risky features while maintaining core business functionality. NOTE: Apple's allowRosettaUsageAwareness key (com.apple.applicationaccess) shipped in Intune service release 2604 (April 2026) but is intentionally NOT set here - this project deploys only native/universal apps and removed Rosetta 2 (see CHANGELOG 2026-06-03). To enforce Rosetta posture, add the setting in the Settings Catalog under Restrictions and set it explicitly (default-deny) for your environment.</Description>
 	<Platform>macOS</Platform>
 	<Category>Device Restrictions</Category>
 	<SourceFile>configurations/intune/pol-sec-006-restrictions.json</SourceFile>

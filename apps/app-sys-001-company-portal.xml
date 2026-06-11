@@ -3,7 +3,7 @@
   <Version>1.0</Version>
   <Type>LobApp</Type>
   <Name>APP-SYS-001 - Company Portal</Name>
-  <Description>Installs Microsoft Company Portal for macOS. Required for device enrollment, compliance evaluation, and access to corporate resources protected by Conditional Access. The app automatically updates via Microsoft AutoUpdate (MAU) after initial installation.</Description>
+  <Description>Installs Microsoft Company Portal for macOS. Required for device enrollment, compliance evaluation, and access to corporate resources protected by Conditional Access. The app automatically updates via Microsoft AutoUpdate (MAU) after initial installation. Platform SSO version floors: 5.2404.0+ for general Platform SSO, 5.2604.0+ for Platform SSO during ADE / Setup Assistant. The bundled 5.2604.1 build satisfies both flows.</Description>
   <Platform>macOS</Platform>
   <Category>Config</Category>
   <SourceFile>apps/CompanyPortal-Installer.pkg</SourceFile>

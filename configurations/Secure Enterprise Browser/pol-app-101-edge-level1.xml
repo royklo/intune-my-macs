@@ -4,7 +4,7 @@
   <Version>1.0</Version>
     <Type>Policy</Type>
     <Name>POL-APP-101 - Edge Browser Level 1 Basic</Name>
-    <Description>Enhanced basic browser configuration for Microsoft Edge addressing gap analysis findings (Certificate management, network policies, system integration)</Description>
+    <Description>Enhanced basic browser configuration for Microsoft Edge addressing gap analysis findings (Certificate management, network policies, system integration). NOTE: AutoSelectCertificateForUrls ships with the placeholder domain *.contoso.com - replace it with your own URL pattern before deploying, or remove the setting if you do not use automatic client-certificate selection.</Description>
     <Platform>macOS</Platform>
     <Category>Secure Enterprise Browser</Category>
     <SourceFile>configurations/Secure Enterprise Browser/pol-app-101-edge-level1.json</SourceFile>

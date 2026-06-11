@@ -3,7 +3,7 @@
   <Version>1.0</Version>
   <Type>Policy</Type>
   <Name>POL-IDP-001 - Entra Platform SSO</Name>
-  <Description>Platform Single Sign-On (SSO) configuration for Microsoft Entra ID on macOS.</Description>
+  <Description>Platform Single Sign-On (SSO) configuration for Microsoft Entra ID on macOS. NOTE: choice settings export as numeric values but the Settings Catalog UI shows names. In this profile: Platform SSO Authentication Method 1 = UserSecureEnclaveKey (0 = Password, 2 = SmartCard); User Authorization Mode 1 = Admin (0 = Standard, 2 = Groups); SSO Extension Type 1 = Redirect (0 = Credential). See the numeric-to-name mapping table in README.md.</Description>
   <Platform>macOS</Platform>
   <Category>Identity</Category>
   <SourceFile>configurations/entra/pol-idp-001-platform-sso.json</SourceFile>
