@@ -1473,6 +1473,57 @@ function New-macOSAppBody() {
     return $body
 }
 
+function Get-MissingReusableSettingIdsFromErrorMessage {
+    param(
+        [string]$Message
+    )
+    if ([string]::IsNullOrWhiteSpace($Message)) { return @() }
+    if ($Message -notmatch 'Reusable Settings are not found') { return @() }
+
+    $ids = [regex]::Matches($Message, '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}') |
+        ForEach-Object { $_.Value } |
+        Select-Object -Unique
+    return @($ids)
+}
+
+function Remove-SettingsWithReusableReferenceIds {
+    param(
+        [Parameter(Mandatory)] [object]$PolicyObject,
+        [Parameter(Mandatory)] [string[]]$ReferenceIds
+    )
+
+    $removed = 0
+    $filtered = @()
+    $settings = @($PolicyObject.settings)
+
+    foreach ($setting in $settings) {
+        $settingJson = ConvertTo-Json -InputObject $setting -Depth 30 -Compress
+        $containsMissingId = $false
+        foreach ($id in $ReferenceIds) {
+            if ($settingJson -match [regex]::Escape($id)) {
+                $containsMissingId = $true
+                break
+            }
+        }
+
+        if ($containsMissingId) {
+            $removed++
+        } else {
+            $filtered += $setting
+        }
+    }
+
+    $PolicyObject.settings = $filtered
+    if ($PolicyObject.PSObject.Properties.Name -contains 'settingCount') {
+        $PolicyObject.settingCount = @($filtered).Count
+    }
+
+    return [PSCustomObject]@{
+        Policy  = $PolicyObject
+        Removed = $removed
+    }
+}
+
 
 # Enumerate policies
 if ($importPolicies) {
@@ -1526,7 +1577,29 @@ if ($importPolicies) {
                 Write-Host "  - [dry-run] Would create configuration policy '$($policyContent.name)'." -ForegroundColor DarkGray
             } else {
                 # create policy with json content
-                $policyImportResults = Invoke-MgGraphRequest -Method POST -Uri "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies" -Body $policyContentJson
+                $policyImportResults = $null
+                try {
+                    $policyImportResults = Invoke-MgGraphRequest -Method POST -Uri "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies" -Body $policyContentJson
+                } catch {
+                    $errorMessage = $_ | Out-String
+                    $missingReusableIds = Get-MissingReusableSettingIdsFromErrorMessage -Message $errorMessage
+
+                    if (@($missingReusableIds).Count -gt 0) {
+                        $retryPolicyObject = ConvertFrom-Json -InputObject $policyContentJson -Depth 30
+                        $sanitized = Remove-SettingsWithReusableReferenceIds -PolicyObject $retryPolicyObject -ReferenceIds $missingReusableIds
+
+                        if ($sanitized.Removed -gt 0) {
+                            Write-Warning "  - Removed $($sanitized.Removed) setting(s) with missing reusable reference ID(s): $($missingReusableIds -join ', '). Retrying policy creation."
+                            $retryJson = ConvertTo-Json -InputObject $sanitized.Policy -Depth 30
+                            $policyImportResults = Invoke-MgGraphRequest -Method POST -Uri "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies" -Body $retryJson
+                        } else {
+                            throw
+                        }
+                    } else {
+                        throw
+                    }
+                }
+
                 if ($policyImportResults) {
                     Write-Host "  - Policy $($policyImportResults.name) imported successfully with ID: $($policyImportResults.id)" -ForegroundColor Green
                     $createdPolicyIds += $policyImportResults.id
