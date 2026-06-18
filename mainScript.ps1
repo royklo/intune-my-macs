@@ -479,6 +479,19 @@ if ($tenantId) {
 }
 Connect-MgGraph @graphParams
 
+# Resolve the tenant ID we are actually connected to. This is used to substitute
+# REPLACE_WITH_TENANT_ID placeholders in policy JSON (e.g. the OneDrive Known Folder
+# Move silent opt-in) with the correct Entra tenant GUID before the policy is created.
+$resolvedTenantId = $tenantId
+if (-not $resolvedTenantId) {
+    try { $resolvedTenantId = (Get-MgContext).TenantId } catch { $resolvedTenantId = $null }
+}
+if ($resolvedTenantId) {
+    Write-Host "Resolved tenant ID for policy substitution: $resolvedTenantId" -ForegroundColor DarkGray
+} else {
+    Write-Warning "Could not resolve a tenant ID; policies using REPLACE_WITH_TENANT_ID will be skipped. Pass --tenant-id <GUID> to set it explicitly."
+}
+
 $resolvedGroupId = $null
 if ($assignGroupName) {
     Write-Host "Validating assignment group '$assignGroupName'..." -ForegroundColor Cyan
@@ -1493,6 +1506,21 @@ if ($importPolicies) {
                 }
 
                 $policyContentJson = ConvertTo-Json -InputObject $policyContent -Depth 20
+
+                # Substitute the tenant ID placeholder with the tenant we are connected to.
+                # Used by settings such as the OneDrive Known Folder Move silent opt-in, which
+                # require the literal Entra tenant GUID. Intune-native tokens like {{mail}} are
+                # intentionally left untouched - Intune resolves those per-user at deployment.
+                if ($policyContentJson -match 'REPLACE_WITH_TENANT_ID') {
+                    if ($resolvedTenantId) {
+                        $policyContentJson = $policyContentJson.Replace('REPLACE_WITH_TENANT_ID', $resolvedTenantId)
+                        Write-Host "  - Substituted REPLACE_WITH_TENANT_ID with tenant ID '$resolvedTenantId'." -ForegroundColor DarkGray
+                    } else {
+                        Write-Warning "Policy '$($p.name)' contains REPLACE_WITH_TENANT_ID but no tenant ID could be resolved; skipping it. Re-run with --tenant-id <GUID>."
+                        Write-Host ""
+                        continue
+                    }
+                }
 
             if (-not $applyChanges) {
                 Write-Host "  - [dry-run] Would create configuration policy '$($policyContent.name)'." -ForegroundColor DarkGray

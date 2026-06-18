@@ -1,0 +1,11 @@
+<MacIntuneManifest>
+  <ReferenceId>POL-APP-104</ReferenceId>
+  <Version>1.0</Version>
+  <Type>Policy</Type>
+  <Name>POL-APP-104 - OneDrive Full Disk Access (PPPC)</Name>
+  <Description>Grants OneDrive (com.microsoft.OneDrive) Full Disk Access (SystemPolicyAllFiles) via a Privacy Preferences Policy Control (PPPC) settings-catalog profile. Pre-approves OneDrive access to protected file locations so file sync works without per-user TCC consent prompts.</Description>
+  <Platform>macOS</Platform>
+  <Category>Privacy</Category>
+  <SourceFile>configurations/office/pol-app-104-onedrive-fda-pppc.json</SourceFile>
+  <SettingsCount>1</SettingsCount>
+</MacIntuneManifest>

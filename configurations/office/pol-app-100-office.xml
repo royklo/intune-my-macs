@@ -1,0 +1,11 @@
+<MacIntuneManifest>
+  <ReferenceId>POL-APP-100</ReferenceId>
+  <Version>2.0</Version>
+  <Type>Policy</Type>
+  <Name>POL-APP-100 - Microsoft Office Configuration</Name>
+  <Description>Microsoft 365 for Mac settings catalog: update channel/deadlines, auto sign-in, diagnostic data level, Office activation email, OneDrive Files On-Demand and Known Folder Move silent opt-in, fonts, and the new Outlook experience. The OneDrive KFM tenant placeholder (REPLACE_WITH_TENANT_ID) is substituted with the connected Entra tenant ID at deploy time; the {{mail}} token in OfficeActivationEmailAddress is resolved per-user by Intune. The Outlook DefaultEmailAddressOrDomain key is intentionally omitted - {{mail}} does not expand for it in a settings-catalog policy. AcknowledgedDataCollectionPolicy uses the numeric/choice form (1 = required data only) - MAU ignores the deprecated string form.</Description>
+  <Platform>macOS</Platform>
+  <Category>Office</Category>
+  <SourceFile>configurations/office/pol-app-100-office.json</SourceFile>
+  <SettingsCount>22</SettingsCount>
+</MacIntuneManifest>

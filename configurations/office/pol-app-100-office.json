@@ -3,14 +3,14 @@
     "createdDateTime": "2023-03-16T17:02:49.1129442Z",
     "creationSource": null,
     "description": "",
-    "lastModifiedDateTime": "2025-05-09T11:51:35.338648Z",
+    "lastModifiedDateTime": "2026-06-18T13:14:07.9868126Z",
     "name": "Office (Settings Catalog)",
     "platforms": "macOS",
     "priorityMetaData": null,
     "roleScopeTagIds": [
         "0"
     ],
-    "settingCount": 16,
+    "settingCount": 22,
     "technologies": "mdm,appleRemoteManagement",
     "id": "2d05b365-a452-48bd-8035-e8a477a46c09",
     "templateReference": {
@@ -26,9 +26,10 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "com.apple.managedclient.preferences_acknowledgeddatacollectionpolicy",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
-                    "value": "com.apple.managedclient.preferences_acknowledgeddatacollectionpolicy_0",
+                    "value": "com.apple.managedclient.preferences_acknowledgeddatacollectionpolicy_1",
                     "children": []
                 }
             }
@@ -39,6 +40,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "com.apple.managedclient.preferences_updatedeadline.daysbeforeforcedquit",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "simpleSettingValue": {
                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                     "settingValueTemplateReference": null,
@@ -52,6 +54,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "com.apple.managedclient.preferences_disableinsidercheckbox",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "com.apple.managedclient.preferences_disableinsidercheckbox_true",
@@ -65,6 +68,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "com.apple.managedclient.preferences_howtocheck",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "com.apple.managedclient.preferences_howtocheck_0",
@@ -78,6 +82,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "com.apple.managedclient.preferences_enablecheckforupdatesbutton",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "com.apple.managedclient.preferences_enablecheckforupdatesbutton_true",
@@ -91,6 +96,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "com.apple.managedclient.preferences_updatedeadline.finalcountdown",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "simpleSettingValue": {
                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                     "settingValueTemplateReference": null,
@@ -104,6 +110,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "com.apple.managedclient.preferences_startdaemononapplaunch",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "com.apple.managedclient.preferences_startdaemononapplaunch_true",
@@ -117,6 +124,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "com.apple.managedclient.preferences_channelname",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "com.apple.managedclient.preferences_channelname_0",
@@ -130,6 +138,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "com.apple.managedclient.preferences_updatecheckfrequency",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "simpleSettingValue": {
                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                     "settingValueTemplateReference": null,
@@ -143,6 +152,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "com.apple.managedclient.preferences_diagnosticdatatypepreference",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "com.apple.managedclient.preferences_diagnosticdatatypepreference_1",
@@ -156,6 +166,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "com.apple.managedclient.preferences_officeautosignin",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "com.apple.managedclient.preferences_officeautosignin_true",
@@ -169,6 +180,7 @@
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "com.apple.managedclient.preferences_officeactivationemailaddress",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "simpleSettingValue": {
                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationStringSettingValue",
                     "settingValueTemplateReference": null,
@@ -180,12 +192,13 @@
             "id": "12",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
-                "settingDefinitionId": "com.apple.managedclient.preferences_defaultemailaddressordomain",
+                "settingDefinitionId": "com.apple.managedclient.preferences_kfmsilentoptin",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "simpleSettingValue": {
                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationStringSettingValue",
                     "settingValueTemplateReference": null,
-                    "value": "{{mail}}"
+                    "value": "REPLACE_WITH_TENANT_ID"
                 }
             }
         },
@@ -193,11 +206,12 @@
             "id": "13",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
-                "settingDefinitionId": "com.apple.managedclient.preferences_enablenewoutlook",
+                "settingDefinitionId": "com.apple.managedclient.preferences_disabletutorial",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
-                    "value": "com.apple.managedclient.preferences_enablenewoutlook_3",
+                    "value": "com.apple.managedclient.preferences_disabletutorial_true",
                     "children": []
                 }
             }
@@ -206,13 +220,126 @@
             "id": "14",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "com.apple.managedclient.preferences_filesondemandenabled",
+                "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "com.apple.managedclient.preferences_filesondemandenabled_true",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "15",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "com.apple.managedclient.preferences_enableallocsiclients",
+                "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "com.apple.managedclient.preferences_enableallocsiclients_true",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "16",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "com.apple.managedclient.preferences_kfmsilentoptindesktop",
+                "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "com.apple.managedclient.preferences_kfmsilentoptindesktop_true",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "17",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "com.apple.managedclient.preferences_kfmsilentoptindocuments",
+                "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "com.apple.managedclient.preferences_kfmsilentoptindocuments_true",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "18",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "com.apple.managedclient.preferences_openatlogin",
+                "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "com.apple.managedclient.preferences_openatlogin_true",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "19",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "com.apple.managedclient.preferences_enablenewoutlook",
+                "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "com.apple.managedclient.preferences_enablenewoutlook_3",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "20",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "com.apple.managedclient.preferences_userpreference_maxchecklistdisplaydurationmet",
                 "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "com.apple.managedclient.preferences_userpreference_maxchecklistdisplaydurationmet_true",
                     "children": []
                 }
+            }
+        },
+        {
+            "id": "21",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance",
+                "settingDefinitionId": "com.apple.font_com.apple.font",
+                "settingInstanceTemplateReference": null,
+                "auditRuleInformation": null,
+                "groupSettingCollectionValue": [
+                    {
+                        "settingValueTemplateReference": null,
+                        "children": [
+                            {
+                                "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
+                                "settingDefinitionId": "com.apple.font_font",
+                                "settingInstanceTemplateReference": null,
+                                "auditRuleInformation": null,
+                                "simpleSettingValue": {
+                                    "@odata.type": "#microsoft.graph.deviceManagementConfigurationReferenceSettingValue",
+                                    "settingValueTemplateReference": null,
+                                    "value": "f015db7e-61f8-4882-8469-1b77f4efbb2c",
+                                    "note": "Fluent_Calibri.ttf"
+                                }
+                            }
+                        ]
+                    }
+                ]
             }
         }
     ]
