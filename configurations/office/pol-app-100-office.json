@@ -29,7 +29,7 @@
                 "auditRuleInformation": null,
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
-                    "value": "com.apple.managedclient.preferences_acknowledgeddatacollectionpolicy_1",
+                    "value": "com.apple.managedclient.preferences_acknowledgeddatacollectionpolicy_0",
                     "children": []
                 }
             }
