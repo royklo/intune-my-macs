@@ -2,14 +2,17 @@ configurations/.DS_Store
 .DS_Store
 .venv
 
-# MDE onboarding files (contain sensitive tenant-specific configuration)
-mde/cfg-mde-001-onboarding.json
-mde/cfg-mde-001-onboarding.mobileconfig
-mde/cfg-mde-001-onboarding.xml
+# MDE onboarding files (contain sensitive tenant-specific configuration).
+# Bare filenames so they stay ignored wherever they land (macOS/mde/, or a
+# stale root copy left over from the macOS/ restructure).
+cfg-mde-001-onboarding.json
+cfg-mde-001-onboarding.mobileconfig
+cfg-mde-001-onboarding.xml
 
 
 # Local OSS compliance audit reports — not for check-in
 .oss-compliance/
+*-oss-compliance-report.md
 
 # Company Portal installer — downloaded at runtime by mainScript.ps1
-apps/CompanyPortal-Installer.pkg
+CompanyPortal-Installer.pkg
