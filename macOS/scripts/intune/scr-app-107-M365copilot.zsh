@@ -1,4 +1,7 @@
 #!/bin/zsh
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 weburl="https://go.microsoft.com/fwlink/?linkid=2325438"
 appname="Microsoft 365 Copilot"
 app="Microsoft 365 Copilot.app"

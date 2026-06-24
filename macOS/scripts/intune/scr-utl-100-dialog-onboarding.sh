@@ -1,4 +1,7 @@
 #!/bin/zsh
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 ############################################################################################
 ##
 ## Swift Dialog - App Installation Monitor

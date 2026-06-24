@@ -1,4 +1,6 @@
 #!/bin/zsh
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 #
 # Intune shell script: downloads the latest Intune Log Watch release DMG and installs
 # IntuneLogWatch.app into /Applications. Intended to run as root via Intune shell scripts.

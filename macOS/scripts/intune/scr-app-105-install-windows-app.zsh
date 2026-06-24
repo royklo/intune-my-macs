@@ -1,4 +1,7 @@
 #!/bin/zsh
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 weburl="https://go.microsoft.com/fwlink/?linkid=868963"
 appname="Windows App"
 app="Windows App.app"

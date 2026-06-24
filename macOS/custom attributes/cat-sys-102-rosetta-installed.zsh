@@ -1,4 +1,6 @@
 #!/usr/bin/env zsh
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 
 # Custom Attribute: Rosetta 2 installed (true/false)
 #

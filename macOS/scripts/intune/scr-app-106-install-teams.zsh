@@ -1,4 +1,7 @@
 #!/bin/zsh
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 weburl="https://go.microsoft.com/fwlink/?linkid=2249065"
 appname="Microsoft Teams"
 app="Microsoft Teams.app"

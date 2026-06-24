@@ -1,4 +1,7 @@
 #!/usr/bin/env pwsh
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+
 #Requires -Version 7
 <#
 .SYNOPSIS
