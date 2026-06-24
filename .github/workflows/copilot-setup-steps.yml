@@ -1,0 +1,36 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+#
+# Copilot setup steps — pre-installs the validation toolchain so the hosted
+# GitHub Copilot coding agent starts from a reproducible environment.
+# GitHub runs the job named `copilot-setup-steps` before an agent session;
+# it is not part of normal CI (only workflow_dispatch otherwise).
+name: Copilot setup steps
+
+on:
+  workflow_dispatch:
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install documentation-tool dependencies
+        run: pip install -r tools/requirements.txt
+
+      - name: Install XML validation tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml2-utils
+
+      - name: Smoke-test the verify loop
+        # pwsh, python3, shellcheck and xmllint are present on ubuntu runners;
+        # plutil is macOS-only and is skipped gracefully here.
+        run: ./tools/verify.sh

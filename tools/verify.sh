@@ -119,6 +119,19 @@ else
   note "  (shellcheck not found — skipping shell lint)"
 fi
 
+# --- Context integrity (golden guard) -------------------------------------
+note "Checking agent-context integrity…"
+if [ -x "$REPO_ROOT/tools/check-context.sh" ]; then
+  if ctx_out="$("$REPO_ROOT/tools/check-context.sh" 2>&1)"; then
+    ok "agent context is consistent"
+  else
+    printf '%s\n' "$ctx_out" | sed 's/^/  /'
+    bad "agent-context check failed (see above)"
+  fi
+else
+  note "  (tools/check-context.sh not found — skipping)"
+fi
+
 # --- Result ----------------------------------------------------------------
 echo
 if [ "$fail" -eq 0 ]; then

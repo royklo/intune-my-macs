@@ -10,8 +10,8 @@
 # from the public PowerShell Gallery (no committed manifest), so there is no
 # ecosystem for Dependabot to monitor for them.
 #
-# When GitHub Actions workflows are added under .github/workflows/, add a
-# "github-actions" entry here so the actions are kept up to date as well.
+# The github-actions ecosystem keeps the GitHub Actions in .github/workflows/
+# (e.g. copilot-setup-steps.yml) up to date.
 version: 2
 updates:
   - package-ecosystem: "pip"
@@ -19,6 +19,14 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "chore(deps)"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
     labels:
       - "dependencies"
     commit-message:

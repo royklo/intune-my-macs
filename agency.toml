@@ -1,0 +1,41 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+#
+# Machine-readable companion to AGENTS.md for agentic tooling (setup, scan,
+# scoring). Values here must agree with AGENTS.md and docs/. Never put secrets
+# in this file.
+
+[repo]
+name = "intune-my-macs"
+display-name = "Intune my Macs"
+type = "code"
+host = "github"
+github-org = "microsoft"
+classification = "non-production"
+
+[readiness]
+tier = "baseline_ready"
+agents-md = true
+copilot-instructions = true
+verify-script = true
+agency-toml = true
+codeowners = true
+
+[verify]
+# Single command an agent runs to validate a change before pushing.
+command = "./tools/verify.sh"
+
+[mcp.required]
+# MCP servers a fresh agent session should auto-load for this repo. The repo
+# interacts with GitHub for source and PR work; deployment uses the Microsoft
+# Graph PowerShell SDK directly (not via MCP).
+repo = ["github"]
+tracker-pr = ["github"]
+
+[security]
+# Guardrails for long, mostly-unattended agent runs: routine read-only steps
+# proceed without prompting, while anything destructive still requires approval.
+external-content-is-untrusted = true
+auto-approve-read-only = true
+destructive-commands-require-approval = true
+never-commit-secrets = true
