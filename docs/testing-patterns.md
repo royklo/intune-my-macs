@@ -1,3 +1,16 @@
+---
+authority: canonical
+applies-to: intune-my-macs/
+last-reviewed: 2026-06-25
+owners:
+  - alias: theneiljohnson
+    role: docs
+  - alias: CKunze-MSFT
+    role: docs
+review-cadence: quarterly
+audience: agent
+---
+
 <!-- Copyright (c) Microsoft Corporation. -->
 <!-- Licensed under the MIT License. -->
 
