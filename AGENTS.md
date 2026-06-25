@@ -1,3 +1,16 @@
+---
+authority: canonical
+applies-to: intune-my-macs/
+last-reviewed: 2026-06-25
+owners:
+  - alias: theneiljohnson
+    role: docs
+  - alias: CKunze-MSFT
+    role: docs
+review-cadence: quarterly
+audience: agent
+---
+
 <!-- Copyright (c) Microsoft Corporation. -->
 <!-- Licensed under the MIT License. -->
 
@@ -11,6 +24,34 @@ Start here, then follow the links below to the detailed docs and standards.
 > Microsoft Defender for Endpoint) into a tenant from a single script. It is
 > **sample/evaluation code, not a hardened production baseline** — see
 > [README.md](README.md). Classification: **non-production**.
+
+## Authority Map
+
+Trust calibration: what to treat as today's truth vs. historical/context-only.
+
+| Path | Authority | Read it as |
+|---|---|---|
+| `AGENTS.md` | canon | Source of truth for how this repo works *today* |
+| `agency.toml` | canon (sidecar) | Machine-readable runtime config (MCP, security, readiness tier) |
+| `.github/copilot-instructions.md` | canon (pointer) | Thin pointer to `AGENTS.md` |
+| `.github/instructions/telemetry.instructions.md` | canon (scoped) | Verbatim org-wide PR + ADO work-item telemetry rules (`applyTo: "**"`) |
+| `docs/architecture.md` | canon | Architecture, data flow, and invariants |
+| `docs/conventions.md` | canon | Day-to-day code/content/structure conventions |
+| `docs/testing-patterns.md` | canon | Validation / testing patterns |
+| `standards/policy-naming-standard.prd` | canon | Reference-ID and display-name standard |
+| `standards/manifest-standard.prd` | canon | Sibling-manifest schema standard |
+| `.github/CODEOWNERS` | canon | Ownership routing for reviews |
+| `.github/prompts/ship.prompt.md` | canon | Release checklist prompt |
+| `.github/prompts/pr-review-reply.prompt.md` | canon | PR review-reply prompt |
+| `INTUNE-MY-MACS-DOCUMENTATION.md` | canon | Generated payload catalog — regenerate, never hand-edit |
+| `mainScript.ps1`, `Start-IntuneMyMacs.ps1`, `macOS/**`, `tools/**`, `scripts/**` | code | Deployment engine, artifacts, and tooling — the docs above are the agent context for them |
+| `README.md`, `CUSTOMIZATION-GUIDE.md`, `BLOG-INTUNE-MY-MACS.md` | human | Human-facing overviews; not maintained as agent context |
+| `CONTRIBUTING.md`, `SECURITY.md`, `SUPPORT.md`, `CODE_OF_CONDUCT.md`, `CHANGELOG.md` | human | Human-facing project and policy docs |
+| `*-oss-compliance-report.md` | transient | Local advisory audit output (gitignored) — context only, never canon |
+
+> **Trust calibration.** Treat *canon* as truth about today. Read *transient* /
+> human rows for context only. When canon and the code disagree, canon is stale
+> and must be fixed in the same PR — not ignored.
 
 ## Repository map
 
@@ -88,3 +129,4 @@ change, regenerate the catalog with
 - [INTUNE-MY-MACS-DOCUMENTATION.md](INTUNE-MY-MACS-DOCUMENTATION.md) — generated payload catalog.
 - [CONTRIBUTING.md](CONTRIBUTING.md) · [SECURITY.md](SECURITY.md) · [SUPPORT.md](SUPPORT.md).
 - [.github/prompts/ship.prompt.md](.github/prompts/ship.prompt.md) — the release checklist.
+- [.github/instructions/telemetry.instructions.md](.github/instructions/telemetry.instructions.md) — **mandatory** PR + ADO work-item telemetry tagging (applies on every turn).

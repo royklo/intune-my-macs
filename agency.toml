@@ -20,6 +20,7 @@ copilot-instructions = true
 verify-script = true
 agency-toml = true
 codeowners = true
+telemetry-instructions = true
 
 [verify]
 # Single command an agent runs to validate a change before pushing.
