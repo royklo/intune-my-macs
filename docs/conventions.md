@@ -37,8 +37,8 @@ repository root. `mainScript.ps1` selects a platform with `--platform` (default
   manifest** with a `<MacIntuneManifest>` root.
 - `mainScript.ps1` discovers artifacts by scanning the selected platform folder
   (e.g. `macOS/`) for these manifests. **A file with no manifest is never
-  deployed** — this is how helper files (including `tools/verify.sh` and the
-  other tools in `tools/`) stay out of tenant deployments.
+  deployed** — this is how helper files (including `scripts/verify.ps1` and the
+  tooling in `tools/`) stay out of tenant deployments.
 - Each manifest must declare:
   - a unique `<ReferenceId>` in `TYPE-CATEGORY-NUMBER` format (e.g.
     `POL-SEC-001`, `CFG-SEC-001`, `SCR-APP-100`, `CAT-SYS-100`, `APP-UTL-001`);
@@ -68,7 +68,7 @@ punctuation.
 
 - `settings[]` entries must use **contiguous, 0-based string IDs**: `"0"`, `"1"`,
   `"2"`, … Gaps or non-zero starts break import.
-- JSON must be well-formed (validated by `tools/verify.sh`). Intune/Graph
+- JSON must be well-formed (validated by `scripts/verify.ps1`). Intune/Graph
   exports may carry a UTF-8 BOM; that is tolerated.
 
 ## Scripts
@@ -124,7 +124,7 @@ Regenerate it whenever artifacts change and commit the result.
 Run the local loop:
 
 ```bash
-./tools/verify.sh
+pwsh ./scripts/verify.ps1
 ```
 
 The full release flow is documented in

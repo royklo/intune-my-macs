@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: "Read and respond to pull-request review threads on intune-my-macs: fetch unresolved review comments, address each (code change or reply), re-validate with ./tools/verify.sh, and post concise replies — pausing for confirmation before pushing or resolving threads."
+description: "Read and respond to pull-request review threads on intune-my-macs: fetch unresolved review comments, address each (code change or reply), re-validate with pwsh ./scripts/verify.ps1, and post concise replies — pausing for confirmation before pushing or resolving threads."
 ---
 
 # Reply to PR review comments
@@ -28,14 +28,14 @@ the steps. See [../../AGENTS.md](../../AGENTS.md) for repo conventions.
    units (one concern per commit).
 3. **If it's a question:** answer it factually in a reply; only change code if the
    answer implies a fix.
-4. **Re-validate:** run `./tools/verify.sh` after code changes — it must pass.
+4. **Re-validate:** run `pwsh ./scripts/verify.ps1` after code changes — it must pass.
 5. **Reply** to the specific thread, concisely, stating what you did:
    - `gh api repos/microsoft/intune-my-macs/pulls/<number>/comments/<comment_id>/replies -f body="…"`
    - Reference the commit that addresses it when applicable.
 
 ## Wrap up
 
-- Re-run `./tools/verify.sh`; regenerate `INTUNE-MY-MACS-DOCUMENTATION.md` if any
+- Re-run `pwsh ./scripts/verify.ps1`; regenerate `INTUNE-MY-MACS-DOCUMENTATION.md` if any
   artifact changed; update `CHANGELOG.md` for material changes.
 - **Pause and show a summary** (threads addressed, replies posted, commits made)
   and **confirm with the user before pushing** or resolving any thread.

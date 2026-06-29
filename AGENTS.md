@@ -69,9 +69,9 @@ the deployment engine and developer tooling live at the repository root.
 | `macOS/scripts/intune/` | Device shell scripts deployed via Intune (install/config). |
 | `macOS/mde/` | Microsoft Defender for Endpoint onboarding, settings, and install script (opt-in via `--mde`). |
 | `macOS/resources/` | Shared assets (e.g. wallpaper). |
-| `tools/` | Local developer tooling (export, dedupe, doc generation, assignment reporting, fork-sync, verify). See [tools/README.md](tools/README.md). |
+| `tools/` | Local developer tooling (export, dedupe, doc generation, assignment reporting, fork-sync). See [tools/README.md](tools/README.md). |
 | `standards/` | The naming and manifest standards every artifact must follow. |
-| `tools/verify.sh` | One-command local validation loop (run before pushing). |
+| `scripts/verify.ps1` | One-command PowerShell validation loop — also runs `scripts/check-context.ps1` (run before pushing). |
 | `.github/prompts/ship.prompt.md` | The release checklist (validate, regenerate docs, changelog, commit, push). |
 
 ## The manifest model (read this first)
@@ -95,7 +95,7 @@ There is no compiled build. The fast local loop is:
 
 ```bash
 # 1. Validate every artifact parses and scripts are syntactically sound:
-./tools/verify.sh
+pwsh ./scripts/verify.ps1
 
 # 2. Preview a deployment (dry-run is the default — nothing is created):
 pwsh ./mainScript.ps1 --assign-group "Intune Mac Pilot"
@@ -105,7 +105,7 @@ pwsh ./mainScript.ps1 --assign-group "Intune Mac Pilot" --apply
 ```
 
 `--platform` defaults to `macOS`; see [README.md](README.md) for the full flag
-list. Run `./tools/verify.sh` before every push. When artifacts under `macOS/`
+list. Run `pwsh ./scripts/verify.ps1` before every push. When artifacts under `macOS/`
 change, regenerate the catalog with
 `python3 tools/Generate-ConfigurationDocumentation.py` (never hand-edit
 `INTUNE-MY-MACS-DOCUMENTATION.md` — it is generated).

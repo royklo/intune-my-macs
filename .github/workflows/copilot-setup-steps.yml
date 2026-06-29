@@ -25,12 +25,7 @@ jobs:
       - name: Install documentation-tool dependencies
         run: pip install -r tools/requirements.txt
 
-      - name: Install XML validation tooling
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libxml2-utils
-
       - name: Smoke-test the verify loop
-        # pwsh, python3, shellcheck and xmllint are present on ubuntu runners;
-        # plutil is macOS-only and is skipped gracefully here.
-        run: ./tools/verify.sh
+        # pwsh, python3 and shellcheck are present on ubuntu runners; plutil is
+        # macOS-only, so .mobileconfig falls back to an XML well-formedness check.
+        run: pwsh -NoProfile -File ./scripts/verify.ps1

@@ -22,28 +22,29 @@ well-formed and internally consistent**, then exercising the engine in **dry-run
 mode. There is no unit-test framework; follow the patterns below when adding or
 changing an artifact.
 
-## 1. The fast local loop — `tools/verify.sh`
+## 1. The fast local loop — `scripts/verify.ps1`
 
 Run it before every push:
 
 ```bash
-./tools/verify.sh
+pwsh ./scripts/verify.ps1
 ```
 
 It validates, repo-wide:
 
 - **JSON** policies parse (UTF-8 BOM tolerated, as in Intune/Graph exports).
-- **XML** manifests are well-formed (`xmllint`).
-- **`.mobileconfig`** profiles are valid property lists (`plutil -lint`).
+- **XML** manifests are well-formed (PowerShell's XML parser).
+- **`.mobileconfig`** profiles are valid property lists (`plutil` when available, otherwise an XML well-formedness check).
 - **PowerShell** scripts parse (via the PowerShell language parser).
 - **Shell** scripts pass `shellcheck` (advisory — warnings do not fail the run).
+- **Agent context** stays internally consistent (`scripts/check-context.ps1`).
 
 Hard failures (malformed JSON/XML/mobileconfig or a PowerShell parse error) exit
 non-zero; fix them before pushing.
 
 ## 2. Manifest & settings consistency (the release checklist)
 
-[`tools/verify.sh`](../tools/verify.sh) covers well-formedness; the deeper,
+[`scripts/verify.ps1`](../scripts/verify.ps1) covers well-formedness; the deeper,
 semantic checks live in the release flow
 ([../.github/prompts/ship.prompt.md](../.github/prompts/ship.prompt.md)). When you
 add or change an artifact, confirm:
@@ -101,6 +102,6 @@ Never hand-edit `INTUNE-MY-MACS-DOCUMENTATION.md`.
 2. Add the sibling `.xml` manifest with a unique `<ReferenceId>`, correct
    `<SourceFile>`, and `<SettingsCount>`.
 3. Add the Microsoft copyright header to any new script.
-4. `./tools/verify.sh` → must pass.
+4. `pwsh ./scripts/verify.ps1` → must pass.
 5. Dry-run `mainScript.ps1` and confirm the new object appears as intended.
 6. Regenerate documentation; update `CHANGELOG.md`.
