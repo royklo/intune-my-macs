@@ -32,13 +32,12 @@ targeting.
 
 ### Performance
 
-All list queries (assignment filters plus the six object categories) are
-retrieved in a **single Microsoft Graph `$batch` request** with
-`$expand=assignments`, so assignments come back inline. This collapses what
-used to be many sequential round trips into one, with additional pages fetched
-only when a category exceeds the page size.
-
-## Requirements
+The assignment filters and all six object categories are retrieved in a
+**single Microsoft Graph `$batch` request** with `$expand=assignments`, so
+assignments come back inline. This collapses what used to be many sequential
+round trips into one; additional pages are fetched only when a category exceeds
+the page size (so categories with more than 100 objects are still fully
+covered).
 
 - **PowerShell 7+** (cross-platform) or Windows PowerShell 5.1
 - **Microsoft Graph PowerShell SDK** - `Microsoft.Graph.Authentication` module
@@ -60,19 +59,20 @@ Output:
 ```text
 Collecting macOS objects (single batched request)...
 
-Type                  Name                           Id              AllDevices AllUsers Filter            Intent   Platforms
-----                  ----                           --              ---------- -------- ------            ------   ---------
-CompliancePolicy      macOS Baseline Compliance      a1b2...                True    False                          macOS
-CustomAttribute       Rosetta Installed              c3d4...                True    False Corporate (include)       macOS
-DeviceConfiguration   FileVault Policy               abc1...                True    False                          macOS
-SettingsCatalogPolicy macOS Security Baseline        def6...                True     True Corporate (include)       macOS
-ShellScript           Rosetta Check First Run Script 0b6c...                True    False                          macOS
-macOSApp              Company Portal                 jkl2...               False     True                 available macOS
-macOSApp              Microsoft Defender             m3n4...                True    False required macOS
+Type                  Name                           Id              AllDevices AllUsers Filter              Intent
+----                  ----                           --              ---------- -------- ------              ------
+CompliancePolicy      macOS Baseline Compliance      a1b2...                True    False
+CustomAttribute       Rosetta Installed              c3d4...                True    False Corporate (include)
+DeviceConfiguration   FileVault Policy               abc1...                True    False
+SettingsCatalogPolicy macOS Security Baseline        def6...                True     True Corporate (include)
+ShellScript           Rosetta Check First Run Script 0b6c...                True    False
+macOSApp              Company Portal                 jkl2...               False     True                     available
+macOSApp              Microsoft Defender             m3n4...                True    False                     required
 ```
 
-> Rows with an empty `Filter` (global assignment with no assignment filter) are
-> printed in **red** to highlight unscoped targeting.
+> Rows with an empty `Filter` (a global assignment with no assignment filter)
+> are printed in **red** to highlight unscoped targeting. The `Platforms` value
+> is omitted from the console table but is still included in CSV/JSON output.
 
 ### Parameters
 
@@ -132,7 +132,7 @@ pwsh ./tools/Get-MacOSGlobalAssignments.ps1 -Unassign -Force
 | `AllUsers` | `True` if assigned to All Users |
 | `Filter` | Assignment filter(s) applied to the global assignment, shown as `FilterName (include\|exclude)`. Empty when no filter is applied — these rows are highlighted in **red**. |
 | `Intent` | App install intent for the global assignment(s): `required`, `available`, `availableWithoutEnrollment`, `uninstall`, or a comma-separated combination. Empty for non-app rows. |
-| `Platforms` | Platform(s) the object targets |
+| `Platforms` | Platform(s) the object targets. Included in CSV/JSON output only — not shown in the console table. |
 
 ### CSV Export
 

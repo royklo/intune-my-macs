@@ -32,7 +32,7 @@ Optional path to write CSV export of results.
 .NOTES
 Requires Microsoft.Graph.Authentication (Connect-MgGraph) and sufficient Intune permissions (DeviceManagementConfiguration.Read.All, DeviceManagementApps.Read.All).
 #>
-
+     
 # Copyright (c) Microsoft Corporation.
 
 
@@ -297,7 +297,7 @@ $display = $rows | Sort-Object Type, Name | ForEach-Object {
         $_
     }
 }
-$display | Format-Table -AutoSize
+$display | Format-Table Type, Name, Id, AllDevices, AllUsers, Filter, Intent -AutoSize
 
 if ($CsvPath) {
     try {
