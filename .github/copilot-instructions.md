@@ -9,9 +9,9 @@ loop, and where the standards live.
 
 ## Working rules
 
-- **Validate before pushing:** run `./tools/verify.sh`. It checks that every
-  JSON, XML, and `.mobileconfig` artifact parses and that PowerShell scripts are
-  syntactically valid.
+- **Validate before pushing:** run `pwsh ./scripts/verify.ps1`. It checks that
+  every JSON, XML, and `.mobileconfig` artifact parses and that PowerShell
+  scripts are syntactically valid.
 - **Follow the conventions:** [../docs/conventions.md](../docs/conventions.md),
   [../standards/policy-naming-standard.prd](../standards/policy-naming-standard.prd),
   and [../standards/manifest-standard.prd](../standards/manifest-standard.prd).

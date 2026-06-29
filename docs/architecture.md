@@ -32,7 +32,8 @@ the entry point and [conventions.md](conventions.md) for day-to-day rules.
 | `Start-IntuneMyMacs.ps1` | macOS-only SwiftDialog GUI that gathers options (prefix, tenant, assignment group, MDE, dry-run vs apply, manifest selection) and shells out to `mainScript.ps1`. |
 | `macOS/` (per-platform folder) | The declarative artifact trees: `configurations/`, `apps/`, `custom attributes/`, `scripts/`, `mde/`, `resources/`. |
 | `standards/` | The naming and manifest standards every artifact must follow. |
-| `tools/` | Developer tooling — documentation generation, policy export, duplicate-setting detection, assignment reporting, fork-sync, and `verify.sh`. |
+| `tools/` | Developer tooling — documentation generation, policy export, duplicate-setting detection, assignment reporting, fork-sync. |
+| `scripts/` | The PowerShell validation loop — `verify.ps1` (well-formedness) and `check-context.ps1` (agent-context golden guard). |
 
 ## Platform model
 
@@ -69,7 +70,7 @@ Key points:
 - **Discovery is manifest-driven.** `Get-DistributedManifests -BasePath
   <platformRoot>` recursively finds `*.xml` files containing a
   `<MacIntuneManifest>` element. **A file without a manifest is never
-  deployed** — that is how helper files (`tools/`, `tools/verify.sh`, docs) stay
+  deployed** — that is how helper files (`tools/`, `scripts/`, docs) stay
   out of tenant deployments.
 - **Each manifest declares** a unique `<ReferenceId>` (`TYPE-CATEGORY-NUMBER`),
   a `<SourceFile>` that must resolve to a real file, and a `<SettingsCount>`.

@@ -24,7 +24,7 @@ telemetry-instructions = true
 
 [verify]
 # Single command an agent runs to validate a change before pushing.
-command = "./tools/verify.sh"
+command = "pwsh -NoProfile -File ./scripts/verify.ps1"
 
 [mcp.required]
 # MCP servers a fresh agent session should auto-load for this repo. The repo

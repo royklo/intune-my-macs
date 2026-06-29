@@ -14,7 +14,7 @@
 
 ## Validation
 
-- [ ] `./tools/verify.sh` passes.
+- [ ] `pwsh ./scripts/verify.ps1` passes.
 - [ ] Any new/changed artifact has a sibling `.xml` manifest with a **unique** `<ReferenceId>` and a `<SourceFile>` that resolves.
 - [ ] Settings Catalog `settings[]` IDs are contiguous and 0-based.
 - [ ] Dry-ran `mainScript.ps1` and the result looks correct (`pwsh ./mainScript.ps1 …`, no `--apply`).
