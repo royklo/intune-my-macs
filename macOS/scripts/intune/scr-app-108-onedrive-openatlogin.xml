@@ -1,0 +1,17 @@
+<IntuneManifest>
+  <ReferenceId>SCR-APP-108</ReferenceId>
+  <Version>1.0</Version>
+  <Type>Script</Type>
+  <Name>SCR-APP-108 - OneDrive Open at Login</Name>
+  <Description>Enables the OneDrive login item via OneDrive's /createloginitem command (26.027+) so OneDrive launches automatically at login for the signed-in user. Needed because the legacy OpenAtLogin preference is deprecated and a no-op since sync app 24.113, and a Managed Login Items profile (POL-SYS-101) can only allow a login item, not enable it.</Description>
+  <Platform>macOS</Platform>
+  <Category>Config</Category>
+  <SourceFile>scripts/intune/scr-app-108-onedrive-openatlogin.zsh</SourceFile>
+    <CreateGraphUri>https://graph.microsoft.com/beta/deviceManagement/deviceShellScripts</CreateGraphUri>
+<Script>
+    <RunAsAccount>user</RunAsAccount>
+    <BlockExecutionNotifications>true</BlockExecutionNotifications>
+    <ExecutionFrequency>PT15M</ExecutionFrequency>
+    <RetryCount>3</RetryCount>
+  </Script>
+</IntuneManifest>

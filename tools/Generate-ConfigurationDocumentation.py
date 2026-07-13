@@ -33,15 +33,12 @@ OUTPUT_FILE = REPO_ROOT / "INTUNE-MY-MACS-DOCUMENTATION.md"
 DOCX_OUTPUT_FILE = REPO_ROOT / "INTUNE-MY-MACS-DOCUMENTATION.docx"
 
 JSON_GLOB = [
-    "configurations/intune/*.json",
-    "configurations/entra/*.json",
-    "configurations/**/*.json",
-    "mde/*.json",
+    "macOS/configurations/**/*.json",
+    "macOS/mde/*.json",
 ]
 MOBILECONFIG_GLOB = [
-    "configurations/intune/*.mobileconfig",
-    "configurations/entra/*.mobileconfig",
-    "mde/*.mobileconfig",
+    "macOS/configurations/**/*.mobileconfig",
+    "macOS/mde/*.mobileconfig",
 ]
 
 METADATA_KEYS = {"PayloadDisplayName", "PayloadIdentifier", "PayloadType", "PayloadUUID", "PayloadVersion"}
@@ -434,8 +431,8 @@ def build_entries(include_mde: bool = False) -> List[Dict[str, Any]]:
     
     # Filter out MDE folder unless --mde flag is passed
     if not include_mde:
-        json_files = [f for f in json_files if not str(f).startswith(str(REPO_ROOT / "mde"))]
-        mc_files = [f for f in mc_files if not str(f).startswith(str(REPO_ROOT / "mde"))]
+        json_files = [f for f in json_files if not str(f).startswith(str(REPO_ROOT / "macOS" / "mde"))]
+        mc_files = [f for f in mc_files if not str(f).startswith(str(REPO_ROOT / "macOS" / "mde"))]
     
     entries: List[Dict[str, Any]] = []
     # Helper: try to load manifest XML next to source file (same base name)
@@ -503,13 +500,13 @@ def build_entries(include_mde: bool = False) -> List[Dict[str, Any]]:
     
     # Filter out MDE folder unless include_mde is True
     if not include_mde:
-        xml_manifests = [m for m in xml_manifests if not str(m).startswith(str(REPO_ROOT / "mde"))]
+        xml_manifests = [m for m in xml_manifests if not str(m).startswith(str(REPO_ROOT / "macOS" / "mde"))]
     
     for mpath in xml_manifests:
         try:
             tree = ET.parse(mpath)
             root = tree.getroot()
-            if root.tag != 'MacIntuneManifest':
+            if root.tag not in ('MacIntuneManifest', 'IntuneManifest'):
                 continue
             type_el = root.find('Type')
             src_el = root.find('SourceFile')
@@ -530,6 +527,9 @@ def build_entries(include_mde: bool = False) -> List[Dict[str, Any]]:
             if artifact_type == 'CustomConfig' and rel_source.endswith('.mobileconfig'):
                 continue
             
+            # SourceFile is relative to the manifest's platform folder (e.g. macOS/)
+            platform_root = mpath.relative_to(REPO_ROOT).parts[0]
+            rel_source = f"{platform_root}/{rel_source}"
             # Additional check: skip if already in entries by relpath
             rel_path_obj = REPO_ROOT / rel_source
             already = any(e['relpath'] == rel_source for e in entries)
