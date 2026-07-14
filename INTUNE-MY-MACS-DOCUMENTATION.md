@@ -2,9 +2,9 @@
 
 ## Configuration Documentation
 
-**Generated:** June 18, 2026
+**Generated:** July 13, 2026
 
-**Total Artifacts:** 43
+**Total Artifacts:** 44
 
 # About Intune My Macs
 
@@ -43,7 +43,7 @@ Click any reference ID to jump to detailed configuration.
 | [cfg-sec-002-screensaver-idle](#cfg-sec-002-screensaver-idle-customconfig) | CustomConfig | 1 |
 | [cfg-sys-100-wallpaper-pppc](#cfg-sys-100-wallpaper-pppc-customconfig) | CustomConfig | 1 |
 | [cmp-cmp-001-macos-baseline](#cmp-cmp-001-macos-baseline-compliance) | Compliance | 12 |
-| [pol-app-100-office](#pol-app-100-office-policy) | Policy | 22 |
+| [pol-app-100-office](#pol-app-100-office-policy) | Policy | 21 |
 | [pol-app-101-company-portal-pppc](#pol-app-101-company-portal-pppc-policy) | Policy | 4 |
 | [pol-app-101-edge-level1](#pol-app-101-edge-level1-policy) | Policy | 22 |
 | [pol-app-104-onedrive-fda-pppc](#pol-app-104-onedrive-fda-pppc-policy) | Policy | 5 |
@@ -70,6 +70,7 @@ Click any reference ID to jump to detailed configuration.
 | [scr-app-105-install-windows-app](#scr-app-105-install-windows-app-script) | Script | 4 |
 | [scr-app-106-install-teams](#scr-app-106-install-teams-script) | Script | 4 |
 | [scr-app-107-M365copilot](#scr-app-107-m365copilot-script) | Script | 4 |
+| [scr-app-108-onedrive-openatlogin](#scr-app-108-onedrive-openatlogin-script) | Script | 4 |
 | [scr-sec-100-install-escrow-buddy](#scr-sec-100-install-escrow-buddy-script) | Script | 4 |
 | [scr-sys-100-device-rename](#scr-sys-100-device-rename-script) | Script | 4 |
 | [scr-sys-101-configure-dock](#scr-sys-101-configure-dock-script) | Script | 4 |
@@ -103,7 +104,7 @@ Installs the Platform SSO AutoFill extension package. The pre-install script ver
 | `Publisher` | `Microsoft Corporation` |
 | `MinimumSupportedOperatingSystem` | `v14_0` |
 | `IgnoreVersionDetection` | `true` |
-| `PreInstallScript` | `macOS/apps/Check-PSSO.zsh` |
+| `PreInstallScript` | `apps/Check-PSSO.zsh` |
 
 
 ### app-utl-001-swift-dialog (Package)
@@ -222,14 +223,14 @@ Baseline compliance: FileVault required, Firewall enabled, SIP enabled, minimum 
 
 ### pol-app-100-office (Policy)
 
-Microsoft 365 for Mac settings catalog: update channel/deadlines, auto sign-in, diagnostic data level, Office activation email, OneDrive Files On-Demand and Known Folder Move silent opt-in, fonts, and the new Outlook experience. The OneDrive KFM tenant placeholder (REPLACE_WITH_TENANT_ID) is substituted with the connected Entra tenant ID at deploy time; the {{mail}} token in OfficeActivationEmailAddress is resolved per-user by Intune. The Outlook DefaultEmailAddressOrDomain key is intentionally omitted - {{mail}} does not expand for it in a settings-catalog policy. AcknowledgedDataCollectionPolicy uses the numeric/choice form (1 = required data only) - MAU ignores the deprecated string form.
+Microsoft 365 for Mac settings catalog: update channel/deadlines, auto sign-in, diagnostic data level, Office activation email, OneDrive Files On-Demand and Known Folder Move silent opt-in, fonts, and the new Outlook experience. The OneDrive KFM tenant placeholder (REPLACE_WITH_TENANT_ID) is substituted with the connected Entra tenant ID at deploy time; the {{mail}} token in OfficeActivationEmailAddress is resolved per-user by Intune. The Outlook DefaultEmailAddressOrDomain key is intentionally omitted - {{mail}} does not expand for it in a settings-catalog policy. The OneDrive OpenAtLogin key is also omitted - deprecated since sync app 24.113 and a no-op on current builds; SCR-APP-108 enables the login item instead. AcknowledgedDataCollectionPolicy uses the numeric/choice form (1 = required data only) - MAU ignores the deprecated string form.
 
 **Source:** `macOS/configurations/office/pol-app-100-office.json`  
-**Settings:** 22
+**Settings:** 21
 
 | Key | Value |
 |-----|-------|
-| `com.apple.managedclient.preferences_acknowledgeddatacollectionpolicy` | `1` |
+| `com.apple.managedclient.preferences_acknowledgeddatacollectionpolicy` | `0` |
 | `com.apple.managedclient.preferences_updatedeadline.daysbeforeforcedquit` | `3` |
 | `com.apple.managedclient.preferences_disableinsidercheckbox` | `True` |
 | `com.apple.managedclient.preferences_howtocheck` | `0` |
@@ -247,7 +248,6 @@ Microsoft 365 for Mac settings catalog: update channel/deadlines, auto sign-in, 
 | `com.apple.managedclient.preferences_enableallocsiclients` | `True` |
 | `com.apple.managedclient.preferences_kfmsilentoptindesktop` | `True` |
 | `com.apple.managedclient.preferences_kfmsilentoptindocuments` | `True` |
-| `com.apple.managedclient.preferences_openatlogin` | `True` |
 | `com.apple.managedclient.preferences_enablenewoutlook` | `3` |
 | `com.apple.managedclient.preferences_userpreference_maxchecklistdisplaydurationmet` | `True` |
 | `com.apple.font_font` | `f015db7e-61f8-4882-8469-1b77f4efbb2c` |
@@ -753,6 +753,21 @@ Downloads and installs Microsoft 365 Copilot from the official Microsoft downloa
 | `RunAsAccount` | `system` |
 | `BlockExecutionNotifications` | `true` |
 | `ExecutionFrequency` | `PT0S` |
+| `RetryCount` | `3` |
+
+
+### scr-app-108-onedrive-openatlogin (Script)
+
+Enables the OneDrive login item via OneDrive's /createloginitem command (26.027+) so OneDrive launches automatically at login for the signed-in user. Needed because the legacy OpenAtLogin preference is deprecated and a no-op since sync app 24.113, and a Managed Login Items profile (POL-SYS-101) can only allow a login item, not enable it.
+
+**Source:** `macOS/scripts/intune/scr-app-108-onedrive-openatlogin.zsh`  
+**Settings:** 4
+
+| Key | Value |
+|-----|-------|
+| `RunAsAccount` | `user` |
+| `BlockExecutionNotifications` | `true` |
+| `ExecutionFrequency` | `PT15M` |
 | `RetryCount` | `3` |
 
 
